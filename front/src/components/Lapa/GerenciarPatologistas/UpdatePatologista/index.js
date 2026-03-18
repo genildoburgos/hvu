@@ -373,7 +373,7 @@ const validateForm = () => {
                     </div>
                 </div>
 
-                <div className={styles.boxcadastro}>
+                {/*<div className={styles.boxcadastro}>
                     <div className={styles.input_space}>
                         <div className="form-label">Deseja alterar sua senha?</div>
                         <input
@@ -393,7 +393,7 @@ const validateForm = () => {
                             </div>
                         </div>
                     )}
-                </div>
+                </div> */}
 
                 {patologista.endereco && (
                     <div className={styles.boxcadastro}>
