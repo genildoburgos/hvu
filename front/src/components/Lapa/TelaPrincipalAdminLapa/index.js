@@ -19,7 +19,7 @@ function TelaPrincipalAdminLapa() {
         }
     }, []);
 
-    if (!roles.includes("admin_lapa")) {
+    if (!roles.includes("admin_lapa") && !roles.includes("patologista")) {
         return (
             <div className={styles.container}>
                 <h3 className={styles.message}>Acesso negado: Você não tem permissão para acessar esta página.</h3>

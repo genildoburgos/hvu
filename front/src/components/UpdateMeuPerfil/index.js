@@ -19,13 +19,13 @@ function UpdateMeuPerfil() {
     const [alterarSenha, setAlterarSenha] = useState(false);
     const [senhaErro, setSenhaErro] = useState("");
     const [confirmarSenhaErro, setConfirmarSenhaErro] = useState("");
-    
+
     const [showAlert, setShowAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
 
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
 
     const [usuario, setUsuario] = useState({
         id: null,
@@ -46,47 +46,47 @@ function UpdateMeuPerfil() {
         }
     });
 
-        
+
     const validarCPF = (cpf) => {
-    if (!cpf) return false;
+        if (!cpf) return false;
 
-    cpf = cpf.replace(/[^\d]+/g, '');
+        cpf = cpf.replace(/[^\d]+/g, '');
 
-    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 
-    let soma = 0;
-    for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
-    let resto = soma % 11;
-    let digito1 = resto < 2 ? 0 : 11 - resto;
-    if (digito1 !== parseInt(cpf.charAt(9))) return false;
+        let soma = 0;
+        for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
+        let resto = soma % 11;
+        let digito1 = resto < 2 ? 0 : 11 - resto;
+        if (digito1 !== parseInt(cpf.charAt(9))) return false;
 
-    soma = 0;
-    for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
-    resto = soma % 11;
-    let digito2 = resto < 2 ? 0 : 11 - resto;
-    if (digito2 !== parseInt(cpf.charAt(10))) return false;
+        soma = 0;
+        for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
+        resto = soma % 11;
+        let digito2 = resto < 2 ? 0 : 11 - resto;
+        if (digito2 !== parseInt(cpf.charAt(10))) return false;
 
-    return true;
+        return true;
     };
 
 
     const validarTelefone = (telefone) => {
-    if (!telefone) return false;
+        if (!telefone) return false;
 
-    const numeroLimpo = telefone.replace(/\D/g, '');
+        const numeroLimpo = telefone.replace(/\D/g, '');
 
-    if (numeroLimpo.length < 10 || numeroLimpo.length > 11) return false;
+        if (numeroLimpo.length < 10 || numeroLimpo.length > 11) return false;
 
-    const ddd = numeroLimpo.substring(0, 2);
-    const numero = numeroLimpo.substring(2);
+        const ddd = numeroLimpo.substring(0, 2);
+        const numero = numeroLimpo.substring(2);
 
-    if (parseInt(ddd) < 11 || parseInt(ddd) > 99) return false;
+        if (parseInt(ddd) < 11 || parseInt(ddd) > 99) return false;
 
-    if (numeroLimpo.length === 11 && numero[0] !== '9') return false;
+        if (numeroLimpo.length === 11 && numero[0] !== '9') return false;
 
-    if (numeroLimpo.length === 10 && !['2', '3', '4', '5'].includes(numero[0])) return false;
+        if (numeroLimpo.length === 10 && !['2', '3', '4', '5'].includes(numero[0])) return false;
 
-    return true;
+        return true;
     };
 
 
@@ -121,7 +121,7 @@ function UpdateMeuPerfil() {
     }
 
     // Verifica se o usuário tem permissão
-    if (!roles.includes("secretario") && !roles.includes("tutor") && !roles.includes("medico")) {
+    if (!roles.includes("secretario") && !roles.includes("tutor") && !roles.includes("medico") && !roles.includes("admin_lapa") && !roles.includes("patologista")) {
         return (
             <div className={styles.container}>
                 <h3 className={styles.message}>Acesso negado: Você não tem permissão para acessar esta página.</h3>
@@ -140,7 +140,7 @@ function UpdateMeuPerfil() {
     const handleUsuarioChange = (event) => {
         const { name, value } = event.target;
         setUsuario({ ...usuario, [name]: value });
-        
+
         // Validação em tempo real para CPF
         if (name === "cpf") {
             const cpfLimpo = value.replace(/[^\d]/g, '');
@@ -150,7 +150,7 @@ function UpdateMeuPerfil() {
                 setErrors(prev => ({ ...prev, cpf: "" }));
             }
         }
-        
+
         // Validação em tempo real para telefone
         if (name === "telefone") {
             if (!validarTelefone(value)) {
@@ -210,21 +210,21 @@ function UpdateMeuPerfil() {
 
     const validateForm = () => {
         const newErrors = {};
-        
+
         // Validação de CPF
         if (!usuario.cpf) {
             newErrors.cpf = "Campo obrigatório";
         } else if (!validarCPF(usuario.cpf)) {
             newErrors.cpf = "CPF inválido";
         }
-        
+
         // Validação de telefone
         if (!usuario.telefone) {
             newErrors.telefone = "Campo obrigatório";
         } else if (!validarTelefone(usuario.telefone)) {
             newErrors.telefone = "Telefone inválido";
         }
-        
+
         if (alterarSenha) {
             if (!usuario.senha) {
                 newErrors.senha = "Senha é obrigatória";
@@ -319,7 +319,7 @@ function UpdateMeuPerfil() {
                 </div>
 
                 {/* opção de alterar senha */}
-                
+
                 {/* <div className={styles.boxcadastro}>
                     <div className={styles.input_space}>
                         <div className="form-label">Deseja alterar sua senha?</div>
@@ -370,7 +370,7 @@ function UpdateMeuPerfil() {
                 </div>
 
             </form>
-            {<Alert message="Informações editadas com sucesso!" show={showAlert} url={`/meuPerfil/${id}`} />}
+            {<Alert message="Informações editadas com sucesso!" show={showAlert} url={(roles.includes('admin_lapa') || roles.includes('patologista')) ? `/lapa/meuPerfil/${id}` : `/meuPerfil/${id}`} />}
             {showErrorAlert && <ErrorAlert message="Erro ao editar informações, tente novamente." show={showErrorAlert} />}
         </div>
     );
