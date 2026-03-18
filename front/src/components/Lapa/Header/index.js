@@ -6,6 +6,7 @@ import { LoginGreenButton } from '../../GreenButton';
 import { LoginWhiteButton } from '../../WhiteButton';
 import { CadastrolWhiteButton } from '../../WhiteButton';
 import LogoLAPA from '../LogoLAPA/logo_lapa';
+import { getCurrentUsuario } from '../../../../services/userService';
 
 //Header com botão de login e cadastro
 export function Header01() {
@@ -49,10 +50,26 @@ export function Header02() {
 export function Header03() {
     const router = useRouter();
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [currentUser, setCurrentUser] = useState(false);
+    const [usuario, setUsuario] = useState(null);
     const dropdownRef = useRef(null);
+
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const userData = await getCurrentUsuario();
+                setCurrentUser(userData);
+                setUsuario(userData.usuario);
+            } catch (error) {
+                console.error("Erro ao buscar usuários:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -86,6 +103,16 @@ export function Header03() {
                 {dropdownOpen && (
                     <div className={styles.dropdown_container}>
                         <div className={styles.dropdown}>
+                            {usuario?.id && (
+                                <button
+                                    className={styles.button1}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={(e) => router.push(`/lapa/meuPerfil/${usuario.id}`)}
+                                >
+                                    <div><Image src="/info_icon.svg" alt="Ícone de perfil" width={18.87} height={18.87} /></div>
+                                    <div>Meu perfil</div>
+                                </button>
+                            )}
                             <button className={styles.button2} onClick={(e) => {
                                 localStorage.removeItem('token');
                                 localStorage.removeItem('roles');
