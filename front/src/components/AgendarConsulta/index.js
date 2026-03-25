@@ -89,9 +89,20 @@ const HorariosSemana = () => {
 
   // Função para retroceder uma semana
   const retrocederSemana = () => {
+    const dataAtual = new Date();
+    dataAtual.setHours(0, 0, 0, 0);
+
+    // Obtém o domingo da semana atual
+    const inicioDestaSemana = new Date(dataAtual);
+    inicioDestaSemana.setDate(dataAtual.getDate() - dataAtual.getDay());
+
     const semanaAnterior = new Date(selecionarData);
     semanaAnterior.setDate(semanaAnterior.getDate() - 7);
-    setSelecionarData(semanaAnterior);
+
+    // Permitir retroceder se a data após retroceder ainda estiver na mesma semana ou no futuro
+    if (semanaAnterior >= inicioDestaSemana) {
+      setSelecionarData(semanaAnterior);
+    }
   };
 
   useEffect(() => {
@@ -260,7 +271,7 @@ const HorariosSemana = () => {
     // Inclui o artigo se ele fizer parte do segundo nome
     const segundoNome =
       ["da", "de", "do", "dos", "das"].includes(partes[1].toLowerCase()) &&
-      partes.length > 2
+        partes.length > 2
         ? `${partes[1]} ${partes[2]}`
         : partes[1];
 
@@ -284,9 +295,8 @@ const HorariosSemana = () => {
               Paciente <span className={styles.obrigatorio}>*</span>
             </h1>
             <select
-              className={`form-select ${styles.input} ${
-                errors.selectedAnimal ? "is-invalid" : ""
-              }`}
+              className={`form-select ${styles.input} ${errors.selectedAnimal ? "is-invalid" : ""
+                }`}
               aria-label="Default select example"
               name="animal"
               value={selectedAnimal ? selectedAnimal.id : ""}
@@ -310,9 +320,8 @@ const HorariosSemana = () => {
 
         <h1 className={styles.titulodataconsulta}>Data da Consulta</h1>
         <h2
-          className={`${styles.descricaotitulodataconsulta} ${
-            errors.selectedVaga ? "is-invalid" : ""
-          }`}
+          className={`${styles.descricaotitulodataconsulta} ${errors.selectedVaga ? "is-invalid" : ""
+            }`}
         >
           Selecione o dia e o horário disponível de sua preferência para o
           atendimento
@@ -421,11 +430,9 @@ const HorariosSemana = () => {
                               ? `${styles.botaohoraIndisponivel}`
                               : vaga.tipoConsulta &&
                                 vaga.tipoConsulta.tipo === "Retorno"
-                              ? `${styles.botaoRetorno} ${
-                                  selectedVaga === vaga ? styles.selected : ""
+                                ? `${styles.botaoRetorno} ${selectedVaga === vaga ? styles.selected : ""
                                 }`
-                              : `${styles.botaoPrimeiraConsulta} ${
-                                  selectedVaga === vaga ? styles.selected : ""
+                                : `${styles.botaoPrimeiraConsulta} ${selectedVaga === vaga ? styles.selected : ""
                                 }`
                           }
                           onClick={() => {
@@ -439,7 +446,7 @@ const HorariosSemana = () => {
                             isProhibited ||
                             !selectedAnimal ||
                             retorno.toLowerCase() !==
-                              vaga.tipoConsulta.tipo.toLowerCase() ||
+                            vaga.tipoConsulta.tipo.toLowerCase() ||
                             isPast
                           }
                         >
@@ -518,10 +525,10 @@ const HorariosSemana = () => {
                       selecionarData,
                       selecionarHorario
                         ? selecionarHorario
-                            .split("T")[1]
-                            .split(":")
-                            .slice(0, 2)
-                            .join(":")
+                          .split("T")[1]
+                          .split(":")
+                          .slice(0, 2)
+                          .join(":")
                         : ""
                     )}
                   </div>

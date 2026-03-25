@@ -15,6 +15,7 @@ function GerenciarVagas() {
     const router = useRouter();
 
     const [showAlert, setShowAlert] = useState(false);
+    const today = new Date().toISOString().split("T")[0];
 
     const [showErrorAlert, setShowErrorAlert] = useState(false);
     const [errors, setErrors] = useState({});
@@ -51,7 +52,7 @@ function GerenciarVagas() {
             setToken(storedToken || "");
             setRoles(storedRoles || []);
         }
-      }, []);
+    }, []);
 
     // Verifica se o usuário tem permissão
     if (!roles.includes("secretario")) {
@@ -195,6 +196,7 @@ function GerenciarVagas() {
                             name="data"
                             value={data}
                             onChange={handleDataChange}
+                            min={today}
                         />
                         {errors.data && <div className={`invalid-feedback ${styles.error_message}`}>{errors.data}</div>}
                     </div>
@@ -209,6 +211,7 @@ function GerenciarVagas() {
                             name="dataFim"
                             value={dataFim}
                             onChange={handleDataFimChange}
+                            min={data || today}
                         />
                         {errors.dataFim && <div className={`invalid-feedback ${styles.error_message}`}>{errors.dataFim}</div>}
                     </div>

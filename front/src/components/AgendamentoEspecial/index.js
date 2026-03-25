@@ -51,10 +51,10 @@ function AgendamentoEspecial() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-        const storedToken = localStorage.getItem('token');
-        const storedRoles = JSON.parse(localStorage.getItem('roles'));
-        setToken(storedToken || "");
-        setRoles(storedRoles || []);
+      const storedToken = localStorage.getItem('token');
+      const storedRoles = JSON.parse(localStorage.getItem('roles'));
+      setToken(storedToken || "");
+      setRoles(storedRoles || []);
     }
   }, []);
 
@@ -95,8 +95,8 @@ function AgendamentoEspecial() {
   }
 
   const handleAnimalSelection = (event) => {
-    const selectAnimalId = event.target.value; 
-    setSelectedAnimal(selectAnimalId); 
+    const selectAnimalId = event.target.value;
+    setSelectedAnimal(selectAnimalId);
   };
 
   const handleTiposConsultaSelection = (event) => {
@@ -104,12 +104,12 @@ function AgendamentoEspecial() {
     setSelectedTiposConsulta(selectedTipo);
     console.log("selectedTipo:", selectedTipo);
   };
-  
+
   const handleEspecialidadeSelection = (event) => {
     const selectedId = event.target.value;
     setSelectedEspecialidade(selectedId);
   };
-  
+
   const handleMedicoSelection = (event) => {
     const selectedId = event.target.value;
     setSelectedMedico(selectedId);
@@ -183,9 +183,9 @@ function AgendamentoEspecial() {
   };
 
   const maskCPF = (cpf) => {
-    if(!cpf) return "";
+    if (!cpf) return "";
 
-    return `***.${cpf.slice(4,11)}-**`;
+    return `***.${cpf.slice(4, 11)}-**`;
   };
 
   const animalOptions = animais.map((animal) => ({
@@ -219,9 +219,10 @@ function AgendamentoEspecial() {
                   locale={ptBR}
                   selected={escolherData}
                   onChange={handleDateChange}
+                  minDate={new Date()}
                 />
               </div>
-              {errors.escolherData && (<div className={`invalid-feedback ${styles.error_message}`}> {errors.escolherData}</div> )}
+              {errors.escolherData && (<div className={`invalid-feedback ${styles.error_message}`}> {errors.escolherData}</div>)}
             </div>
 
             <div className={`col ${styles.col}`}>
