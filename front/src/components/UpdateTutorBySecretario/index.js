@@ -24,9 +24,7 @@ function UpdateTutorBySecretario() {
     const [tutor, setTutor] = useState({});
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
-    const [loading, setLoading] = useState(true); 
-
-    console.log("tutor: ", tutor);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -143,34 +141,34 @@ function UpdateTutorBySecretario() {
             newErrors.nome = "Campo obrigatório";
         }
         if (!tutor.email) {
-            newErrors.email = "Campo obrigatório"; 
+            newErrors.email = "Campo obrigatório";
         }
         if (!tutor.cpf) {
-            newErrors.cpf = "Campo obrigatório"; 
+            newErrors.cpf = "Campo obrigatório";
         }
         if (!tutor.telefone) {
-            newErrors.telefone = "Campo obrigatório"; 
+            newErrors.telefone = "Campo obrigatório";
         }
         if (!tutor.endereco.cep) {
-            newErrors.cep = "Campo obrigatório"; 
+            newErrors.cep = "Campo obrigatório";
         }
         if (!tutor.endereco.rua) {
-            newErrors.rua = "Campo obrigatório"; 
+            newErrors.rua = "Campo obrigatório";
         }
         if (!tutor.endereco.estado) {
-            newErrors.estado = "Campo obrigatório"; 
+            newErrors.estado = "Campo obrigatório";
         }
         if (!tutor.endereco.cidade) {
-            newErrors.cidade = "Campo obrigatório"; 
+            newErrors.cidade = "Campo obrigatório";
         }
         if (!tutor.endereco.numero) {
-            newErrors.numero = "Campo obrigatório"; 
+            newErrors.numero = "Campo obrigatório";
         }
         if (!tutor.endereco.bairro) {
-            newErrors.bairro = "Campo obrigatório"; 
+            newErrors.bairro = "Campo obrigatório";
         }
         setErrors(newErrors);
-    
+
         return Object.keys(newErrors).length === 0;
     };
 
@@ -199,7 +197,6 @@ function UpdateTutorBySecretario() {
 
         try {
             await updateTutor(id, TutorToUpdate);
-            console.log("TutorToUpdate:", TutorToUpdate);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar tutor:", error);
@@ -224,12 +221,12 @@ function UpdateTutorBySecretario() {
                             </div>
                             <div className={`col ${styles.col}`}>
                                 {renderTutorInput("Telefone", tutor.telefone, "telefone", tutor.telefone, handleTutorChange, "tel", errors.telefone, "(99) 99999-9999")}
-                            </div>                     
-                        </div> 
+                            </div>
+                        </div>
                     </div>
                     <div className={`col-md-6 ${styles.customCol}`}>
-                            {renderTutorInput("E-mail", tutor.email, "email", tutor.email, handleTutorChange, "email", errors.email)}
-                        </div>
+                        {renderTutorInput("E-mail", tutor.email, "email", tutor.email, handleTutorChange, "email", errors.email)}
+                    </div>
                 </div>
 
                 {/* opção de mudar senha */}
@@ -260,7 +257,7 @@ function UpdateTutorBySecretario() {
                         <div className={styles.titulo}>Endereço</div>
                         <div className="mb-3">
                             <div className="row">
-                            {renderEnderecoInput("Rua", "rua", tutor.endereco.rua, handleEnderecoChange, errors.rua, tutor.endereco.rua,)}
+                                {renderEnderecoInput("Rua", "rua", tutor.endereco.rua, handleEnderecoChange, errors.rua, tutor.endereco.rua,)}
                                 <div className={`col ${styles.col}`}>
                                     {renderEnderecoInput("CEP", "cep", tutor.endereco.cep, handleCepChange, errors.cep, tutor.endereco.cep, "text", "99999-999")}
                                     {renderEnderecoInput("Cidade", "cidade", tutor.endereco.cidade, handleEnderecoChange, errors.cidade, tutor.endereco.cidade)}

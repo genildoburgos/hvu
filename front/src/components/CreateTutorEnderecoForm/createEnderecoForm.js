@@ -39,8 +39,6 @@ function CreateEnderecoForm({
     }
   };
 
-  console.log("enderecoFormData:", enderecoFormData);
-
   return (
     <div className={styles.boxcadastrotutor}>
       <div className={styles.titulo}>Endereço</div>
@@ -102,9 +100,8 @@ function CreateEnderecoForm({
           </div>
         </div>
         <div
-          className={`${styles.informacaoLAI} ${
-            errors.lai ? "is-invalid" : ""
-          }`}
+          className={`${styles.informacaoLAI} ${errors.lai ? "is-invalid" : ""
+            }`}
         >
           <p>
             A{" "}
