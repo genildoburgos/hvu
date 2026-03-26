@@ -319,7 +319,6 @@ function OrtopedicaSteps() {
       return;
     }
 
-    console.log("Sincronizando UI com os dados da ficha carregada...");
 
     const novosLadosVisiveis = {};
     const novosSelecionados = [];

@@ -43,7 +43,6 @@ function FichaDermatologicaRetorno() {
     );
 
     const [userId, setUserId] = useState(null);
-    console.log("userId:", userId);
 
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
@@ -153,7 +152,6 @@ function FichaDermatologicaRetorno() {
                 const medicoCompletoData = await getMedicoById(medicoId);
                 //Armazena o objeto COMPLETO (que tem o CRMV) no estado
                 setMedicoLogado(medicoCompletoData);
-                console.log("Dados completos do médico logado:", medicoCompletoData);
                 }
             } catch (error) {
                 console.error('Erro ao buscar usuário:', error);

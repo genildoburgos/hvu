@@ -26,7 +26,6 @@ const useFichaManager = () => {
           const parsedIds = JSON.parse(storedIds);
           if (Array.isArray(parsedIds)) {
             setFichaIds(parsedIds.filter((id) => id && id !== "null"));
-            console.log("parsedIds:", parsedIds);
           }
         } catch (error) {
           console.error("Erro ao ler fichaIds:", error);
@@ -36,7 +35,6 @@ const useFichaManager = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Ficha IDs atualizados:", fichaIds);
   }, [fichaIds]);
 
   const addFichaId = (newId) => {
@@ -346,7 +344,6 @@ useEffect(() => {
           conteudo: cleanFichaContent(JSON.parse(ficha.conteudo || "{}")),
         }));
         setFichas(fichasComConteudo);
-        console.log("Fichas processadas:", fichasComConteudo);
       } catch (error) {
         console.error("Erro ao buscar fichas:", error);
         setShowErrorAlert(true);
@@ -362,7 +359,6 @@ useEffect(() => {
     if (typeof window !== "undefined") {
       const currentFichaId = localStorage.getItem("fichaId");
       if (currentFichaId) {
-        console.log("currentFichaId:", currentFichaId);
         addFichaId(currentFichaId);
         localStorage.removeItem("fichaId");
       }
@@ -500,7 +496,6 @@ useEffect(() => {
       return;
     }
     try {
-      console.log("Criando consulta com os dados:", consultaToCreate);
       await createConsulta(consultaToCreate, id);
       // Limpa os dados salvos do localStorage após o sucesso
       localStorage.removeItem('consultaFormData');

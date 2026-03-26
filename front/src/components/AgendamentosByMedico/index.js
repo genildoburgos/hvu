@@ -9,10 +9,8 @@ import { format } from "date-fns";
 export default function AgendamentosByMedico() {
   const router = useRouter();
   const { id } = router.query;
-  console.log("id", id);
 
   const [agendamentos, setAgendamentos] = useState([]);
-  console.log("agendamentos:", agendamentos);
 
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +25,6 @@ export default function AgendamentosByMedico() {
   };
 
   const [data, setData] = useState(formatDate(new Date()));
-  console.log("data:", data);
 
   const handleDataChange = (event) => {
     setData(event.target.value);
@@ -64,7 +61,6 @@ export default function AgendamentosByMedico() {
           setErro("");
         } else {
           setAgendamentos([]);
-          console.log("O id ou a data estão indefinidos.");
         }
       } catch (error) {
         if (error.response.status === 404) {

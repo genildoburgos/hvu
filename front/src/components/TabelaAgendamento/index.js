@@ -40,7 +40,6 @@ export default function TabelaAgendamento({
 
 			await reagendamento(id, vagaSelecionada.id, vagaSelecionada.dataHora);
 
-			console.log("Reagendamento concluído com sucesso!");
 			setShowAlert(true);
 		} catch (error) {
 			console.error("Erro ao reagendar vaga:", error);

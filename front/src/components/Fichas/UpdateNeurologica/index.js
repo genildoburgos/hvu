@@ -66,7 +66,6 @@ function NeurologicaSteps() {
   const [data, setData] = useState([]);
   const [agendamentoId, setAgendamentoId] = useState(null);
 
-  console.log("userId:", userId);
   const [formData, setFormData] = useState({
 
     // página 1

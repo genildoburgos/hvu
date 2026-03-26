@@ -43,7 +43,6 @@ function LaudosEmAndamento() {
         const fetchData = async () => {
             try {
                 const fichasData = await getAllFichaSolicitacao();
-                console.log('Dados das fichas:', fichasData); // Log dos dados recebidos
                 setFichas(fichasData);
             } catch (error) {
                 console.error('Erro ao buscar fichas de solicitação de serviço:', error);
@@ -60,7 +59,6 @@ function LaudosEmAndamento() {
         ficha.codigoPatologia  && ficha.codigoPatologia .toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    console.log('Fichas filtradas:', filteredFichas); // Log das fichas filtradas
 
     const handleDeleteFicha = async (fichaId) => {
         try {

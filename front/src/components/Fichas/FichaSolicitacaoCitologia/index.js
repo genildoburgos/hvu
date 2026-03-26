@@ -223,8 +223,6 @@ function FichaSolicitacaoCitologia() {
     }
 
     const handleSaveDrawing = (imagemFinal, linhasDesenhadas) => {
-        console.log("Imagem final recebida:", imagemFinal); // Debug
-        console.log("Linhas desenhadas:", linhasDesenhadas); // Debug
         setFormData(prev => ({
             ...prev,
             imagemLesao: {

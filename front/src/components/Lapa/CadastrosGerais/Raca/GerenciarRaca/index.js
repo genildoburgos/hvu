@@ -44,7 +44,6 @@ function GerenciarRacasList() {
         const fetchData = async () => {
             try {
                 const racasData = await getAllRaca();
-                console.log('Racas recebidas:', racasData); // Debug: verificar os dados recebidos
                 setRacas(racasData);
             } catch (error) {
                 console.error('Erro ao buscar racas:', error);

@@ -140,7 +140,6 @@ function updateFichaSessao() {
                 const medicoCompletoData = await getMedicoById(medicoId);
                 //Armazena o objeto COMPLETO (que tem o CRMV) no estado
                 setMedicoLogado(medicoCompletoData);
-                console.log("Dados completos do médico logado:", medicoCompletoData);
                 }
                 } catch (error) {
                 console.error('Erro ao buscar usuário:', error);
@@ -197,7 +196,6 @@ function updateFichaSessao() {
         };
 
         try {
-            console.log(fichaData)
             await updateFicha(fichaData, fichaId);
             setShowAlert(true);
         } catch (error) {

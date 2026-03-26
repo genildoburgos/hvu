@@ -84,7 +84,6 @@ function TermoDeConcientizacao() {
     };
 
     try {
-      console.log("fichaData:", fichaData);
       await createFicha(fichaData);
       setShowAlert(true);
     } catch (error) {

@@ -53,7 +53,6 @@ function CreateEspecie() {
         const { name, value } = event.target;
         setEspecie({ ...especie, [name]: value });
     };
-    console.log(especie);
 
     const validateForm = () => {
         const errors = {};

@@ -160,7 +160,6 @@ function UpdateAnimalByTutor() {
       }
     };
 
-    console.log("Dados do animal a ser atualizado:", animalToUpdate);
     if(validateForm()) {
       if (id) {
         try {

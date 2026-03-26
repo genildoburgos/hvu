@@ -44,7 +44,6 @@ function CreateMedico() {
         especialidade: []
     });
 
-    console.log("medico:", medico);
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -131,7 +130,6 @@ function CreateMedico() {
             especialidade: selectedEspecialidades.map(espec => ({ id: espec.id }))
         };
 
-        console.log("MedicoToCreate:", MedicoToCreate);
 
         try {
             await createMedico(MedicoToCreate);

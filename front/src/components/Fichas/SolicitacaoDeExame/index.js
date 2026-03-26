@@ -207,8 +207,6 @@ function FichaSolicitacaoExame() {
   }, []);
 
   useEffect(() => {
-    console.log("Estado atual do formData:", formData);
-    console.log("Estado atual do otherValues:", otherValues);
   }, [formData, otherValues]); // Este useEffect será executado sempre que formData ou otherValues mudarem
 
     useEffect(() => {
@@ -328,7 +326,6 @@ function FichaSolicitacaoExame() {
             }
     };
 
-    console.log("Dados a serem enviados para a API:", JSON.stringify(fichaData, null, 2));
 
     try {
       const resultado = await createFicha(fichaData);

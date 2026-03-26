@@ -16,7 +16,6 @@ async function loginClient() {
         localStorage.setItem('tokenClient', token);
         return token;
     } catch (error) {
-        console.log(error);
     }
 }
 

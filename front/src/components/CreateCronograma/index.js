@@ -114,7 +114,6 @@ function CreateCronograma() {
         const { name, value } = event.target;
         setCronograma({ ...cronograma, [name]: value });
     };
-    console.log("cronograma:", cronograma);
 
     const handleEspecialidadeSelection = (event) => {
         const selectedEspecialidadeId = event.target.value;
@@ -126,7 +125,6 @@ function CreateCronograma() {
         setSelectedMedico(selectedMedicoId);
     };
 
-    console.log("medico", selectedMedico);
 
     const validateFields = (cronograma) => {
         const errors = {};
@@ -208,7 +206,6 @@ function CreateCronograma() {
             medico: { id: parseInt(selectedMedico) },
             especialidade: { id: parseInt(selectedEspecialidade) }
         };
-        console.log("cronogramaToCreate", cronogramaToCreate);
 
         try {
             await createCronograma(cronogramaToCreate);

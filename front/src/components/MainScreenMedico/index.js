@@ -8,7 +8,6 @@ function MainScreenMedico() {
     const router = useRouter();
 
     const [userId, setUserId] = useState(null);
-    console.log("userId:", userId);
 
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");

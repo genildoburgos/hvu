@@ -49,7 +49,6 @@ function UpdateOrgao() {
       const fetchData = async () => {
         try {
           const orgaoData = await getOrgaoById(id);
-          console.log("orgaoData",orgaoData )
           setOrgao({
             id: orgaoData.id,
             //image_path: orgaoData.image_path,
@@ -99,14 +98,12 @@ function UpdateOrgao() {
     }
     return errors;
   };
-console.log("orgao",orgao )
   const handleOrgaoUpdate = async () => {
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-console.log("orgaoToUpdate:", orgao)
     try {
       await updateOrgao(orgao.id, orgao);
       setShowAlert(true);

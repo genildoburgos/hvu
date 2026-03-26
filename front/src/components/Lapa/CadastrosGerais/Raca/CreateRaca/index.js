@@ -55,13 +55,11 @@ function CreateRaca() {
         setSelectedEspecie(selectedEspecieId);
     };
 
-    console.log(selectedEspecie);
 
     const handleRacaChange = (event) => {
         const { name, value } = event.target;
         setRaca({ ...raca, [name]: value });
     };
-    console.log(raca);
 
     const validateForm = () => {
         const errors = {};
@@ -92,7 +90,6 @@ function CreateRaca() {
 
         try {
             const newRaca = await createRaca(racaToCreate);
-            console.log("new raça: ", newRaca);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao criar raça:", error);

@@ -53,7 +53,6 @@ function CreateTipoConsulta() {
         const { name, value } = event.target;
         setTipoConsulta({ ...tipoConsulta, [name]: value });
     };
-    console.log(tipoConsulta);
 
     const validateForm = () => {
         const errors = {};

@@ -59,7 +59,6 @@ function CreateAviso() {
         }));
     };
     
-    console.log(aviso);
 
     const validateForm = () => {
         const errors = {};

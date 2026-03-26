@@ -285,7 +285,6 @@ function UpdateMeuPerfil() {
                 bairro: usuario.endereco.bairro
             }
         };
-        console.log("usuarioToUpdate:", usuarioToUpdate);
         try {
             await updateUsuario(usuario.id, usuarioToUpdate);
             setShowAlert(true);

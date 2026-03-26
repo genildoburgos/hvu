@@ -38,7 +38,6 @@ function UpdateEspecie() {
                     const especieData = await getEspecieById(id);
                     setEspecie(especieData);
 
-                    console.log("especieData:", especieData)
                 } catch (error) {
                     console.error('Erro ao buscar espécie:', error);
                 } finally {

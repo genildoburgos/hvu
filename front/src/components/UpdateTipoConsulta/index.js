@@ -38,7 +38,6 @@ function UpdateTipoConsulta() {
                     const tipoConsultaData = await getTipoConsultaById(id);
                     setTipoConsulta(tipoConsultaData);
 
-                    console.log("tipoConsultaData:", tipoConsultaData)
                 } catch (error) {
                     console.error('Erro ao buscar tipo de consulta:', error);
                 } finally {

@@ -80,7 +80,6 @@ function CreateMicroscopia() {
             return;
         }
         try {
-            console.log(microscopia)
             await createCampoLaudoMicroscopia(microscopia);
             setShowAlert(true);
         } catch (error) {

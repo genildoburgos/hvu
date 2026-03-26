@@ -100,7 +100,6 @@ function CreateOrgao() {
       setErrors(validationErrors);
       return;
     }
-    console.log("orgaoToCreate:", orgao)
     try {
       await createOrgao(orgao);
       setShowAlert(true);

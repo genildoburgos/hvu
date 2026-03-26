@@ -82,7 +82,6 @@ function UpdateAtoCirurgico() {
             const aId = router.query.agendamentoId;
             if (id) {
                 setConsultaId(id);
-                console.log("ID da ficha:", id);
             }
             if (aId) {
                 setAgendamentoId(aId);
@@ -230,7 +229,6 @@ function UpdateAtoCirurgico() {
             agendamento: { id: Number(agendamentoId) }
         };
 
-        console.log("Ficha enviada:", fichaData);
 
         try {
             await updateFicha(fichaData, fichaId);

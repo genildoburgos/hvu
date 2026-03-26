@@ -53,7 +53,6 @@ useEffect(() => {
   }
 }, [deletedFotoId]) 
 
-  console.log(fotos)
 
   const handleDeleteFoto = async (fotoId) => {
     try {

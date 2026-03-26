@@ -85,7 +85,6 @@ function AtendimentoCardiologico({
     }
     // Clear posturaOutras to prevent it from being sent
     handleChange({ target: { name: "ExameFisico.posturaOutras", value: "" } });
-    console.log("Formulário válido. Dados prontos para envio:", formData);
     nextStep();
      
   };

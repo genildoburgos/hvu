@@ -222,9 +222,7 @@ function fichaRetornoClinicoSil() {
         };
 
         try {
-            console.log(fichaData)
             const resultado = await createFicha(fichaData);
-            console.log("Resposta da api", resultado.id);
             localStorage.setItem('fichaId', resultado.id.toString());
             localStorage.removeItem("fichaRetornoClinicoSilFormData");
             setShowAlert(true);

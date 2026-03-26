@@ -216,11 +216,9 @@ function FichaAtoCirurgico() {
             }
         };
 
-        console.log("Ficha enviada:", fichaData);
 
         try {
             const resultado = await createFicha(fichaData);
-            console.log("Resposta da api", resultado.id);
             localStorage.setItem('fichaId', resultado.id.toString());
             localStorage.removeItem("fichaAtoCirurgicoFormData");
             setShowAlert(true);

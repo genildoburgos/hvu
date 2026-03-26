@@ -373,7 +373,6 @@ function UpdateClinicaMedicaSteps() {
       agendamento: { id: Number(agendamentoId) }
     };
 
-    console.log("➡️  Enviando para a API:", fichaData);
 
     try {
       await updateFicha(fichaData, fichaId);

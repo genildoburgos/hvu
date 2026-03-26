@@ -48,7 +48,6 @@ function UpdateEspecialidade() {
                     const especialidadeData = await getEspecialidadeById(id);
                     setEspecialidade(especialidadeData);
 
-                    console.log("especialidadeData:", especialidadeData)
                 } catch (error) {
                     console.error('Erro ao buscar especialidade:', error);
                 }

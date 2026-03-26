@@ -43,7 +43,6 @@ function CreatePatologista() {
         especialidade: []
     });
 
-    console.log("patologista:", patologista);
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -128,7 +127,6 @@ function CreatePatologista() {
             especialidade: selectedEspecialidades.map(espec => ({ id: espec.id }))
         };
 
-        console.log("PatologistaToCreate:", PatologistaToCreate);
 
         try {
             await createPatologista(PatologistaToCreate);

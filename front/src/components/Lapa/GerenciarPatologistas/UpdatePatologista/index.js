@@ -92,7 +92,6 @@ function UpdatePatologista() {
         }
     }, [selectedEspecialidade, especialidades]);
 
-    console.log("Especialidades:", selectedEspecialidades);
 
 
     if (loading) {
@@ -305,14 +304,12 @@ function UpdatePatologista() {
             }
         };
 
-        console.log("patologistaToUpdate:", patologistaToUpdate);
 
         try {
             await updatePatologista(id, patologistaToUpdate);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar patologista:", error);
-            console.log("Erro ao editar informações. Por favor, tente novamente.");
             setShowErrorAlert(true);
         }
     };

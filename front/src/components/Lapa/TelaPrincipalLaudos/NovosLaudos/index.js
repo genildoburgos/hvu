@@ -219,7 +219,6 @@ function CreateFichaForm() {
       dataRecebimento: formatDate(fichaDeSolicitacaoData.dataRecebimento),
     }
 
-    console.log(fichaToCreate)
 
     try {
       await createFichaSolicitacao(fichaToCreate)

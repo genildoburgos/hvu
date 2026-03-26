@@ -98,7 +98,6 @@ function UpdateMedico() {
         }
     }, [selectedEspecialidade, especialidades]);
 
-    console.log("Especialidades:", selectedEspecialidades);
 
     // Verifica se os dados estão carregando
     if (loading) {
@@ -254,14 +253,12 @@ function UpdateMedico() {
             }
         };
 
-        console.log("MedicoToUpdate:", MedicoToUpdate);
 
         try {
             await updateMedico(id, MedicoToUpdate);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar medico:", error);
-            console.log("Erro ao editar informações. Por favor, tente novamente.");
             setShowErrorAlert(true);
         }
     };

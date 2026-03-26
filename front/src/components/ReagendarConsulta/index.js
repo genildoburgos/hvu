@@ -24,10 +24,6 @@ function ReagendarConsulta() {
 	const [token, setToken] = useState("");
 	const [loading, setLoading] = useState(true);
 
-	console.log("vagas:", vagas);
-	console.log("novaData:", novaData);
-	console.log("vagasFiltradas:", vagasFiltradas);
-	console.log("selectedVaga:", selectedVaga); // Log da vaga selecionada
 
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
@@ -42,7 +38,6 @@ function ReagendarConsulta() {
 		const fetchData = async () => {
 			try {
 				const vagasList = await getAllVaga();
-				console.log("vagasList:", vagasList);
 
 				// Função para normalizar strings removendo acentos e convertendo para minúsculas
 				const normalizeString = (str) =>

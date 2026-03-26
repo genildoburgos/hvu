@@ -176,11 +176,9 @@ function CreateTutorEnderecoForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateForm()) {
-      console.log("form:", formData);
       try {
         const response = await createTutor(formData);
         await postLogin(tutorFormData.email, tutorFormData.senha);
-        console.log(response);
         setShowAlert(true);
       } catch (error) {
         console.error("Erro ao cadastrar tutor:", error);
@@ -194,7 +192,6 @@ function CreateTutorEnderecoForm() {
         setShowErrorAlert(true);
       }
     } else {
-      console.log("Formulário inválido. Corrija os erros.");
     }
   };
 

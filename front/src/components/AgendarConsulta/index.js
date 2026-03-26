@@ -45,9 +45,6 @@ const HorariosSemana = () => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState("");
 
-  console.log("retorno:", retorno);
-  console.log("selectedAnimal:", selectedAnimal);
-  console.log("datasProibidas:", datasProibidas);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -122,7 +119,6 @@ const HorariosSemana = () => {
       try {
         const VagasData = await getAllVaga();
         setVagas(VagasData);
-        console.log("VagasData:", VagasData);
       } catch (error) {
         console.error("Erro ao buscar vagas:", error);
       } finally {

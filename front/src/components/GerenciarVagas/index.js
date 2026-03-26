@@ -170,7 +170,6 @@ function GerenciarVagas() {
 
         const vagasToCreate = criarJSON();
 
-        console.log("VagasToCreate:", vagasToCreate);
 
         try {
             await createVagaNormal(vagasToCreate);

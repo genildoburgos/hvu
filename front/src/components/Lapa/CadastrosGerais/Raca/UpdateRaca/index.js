@@ -64,7 +64,6 @@ function UpdateRaca() {
                     });
                     setSelectedEspecie(racaData.especie.id);
 
-                    console.log("racaData:", racaData)
                 } catch (error) {
                     console.error('Erro ao buscar raça:', error);
                 }
@@ -110,11 +109,9 @@ function UpdateRaca() {
             }
         };
 
-        console.log("racaToUpdate:",racaToUpdate);
 
         try {
             const response = await updateRaca(raca.id, racaToUpdate);
-            console.log("response:",response);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar raça:", error);

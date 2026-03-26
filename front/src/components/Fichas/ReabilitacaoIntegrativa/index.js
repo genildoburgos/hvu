@@ -191,7 +191,6 @@ function ReabilitacaoIntegrativaSteps() {
         const aId = router.query.agendamentoId; 
         if (id) {
           setConsultaId(id);
-          console.log("ID da ficha:", id);
         }
         if (aId) {
             setAgendamentoId(aId); 

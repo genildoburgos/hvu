@@ -44,7 +44,6 @@ function GerenciarAreaList() {
         const fetchData = async () => {
             try {
                 const areasData = await getAllArea();
-                console.log(areasData); 
                 setAreas(areasData);
             } catch (error) {
                 console.error('Erro ao buscar áreas:', error);

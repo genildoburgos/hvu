@@ -210,7 +210,6 @@ useEffect(() => {
         try {
             const fichaDataFromApi = await getFichaById(fichaId);
             const conteudo = fichaDataFromApi.conteudo ? JSON.parse(fichaDataFromApi.conteudo) : {};
-            console.log("Conteúdo da ficha bruta da API:", conteudo);
 
             const newFormData = {};
             const newOtherValues = {};

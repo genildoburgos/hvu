@@ -173,7 +173,6 @@ function FichaSolicitacaoCitologia() {
             try {
                 const formData = await getFichaById(fichaId);
                 const conteudo = (JSON.parse(formData.conteudo));
-                console.log("Dados da ficha:", conteudo);
                 setFormData(conteudo);
                 setImagemDesenhada(conteudo.imagemLesao.imagem); 
                 setData(formData.dataHora);

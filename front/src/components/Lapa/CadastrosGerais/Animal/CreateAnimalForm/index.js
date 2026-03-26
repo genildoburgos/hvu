@@ -302,20 +302,16 @@ function CreateAnimalForm() {
 
         try {
           const result = await createAnimalByPatologista(requestData)
-          console.log(result)
           //resetForm()
           setShowAlert(true)
         } catch (error) {
           console.error("Erro ao criar animal:", error)
-          console.log("Detalhes do erro:", error.response)
           //resetForm()
           setShowErrorAlert(true)
         }
       } else {
-        console.log("Aguardando dados de espécies e raças carregarem...")
       }
     } else {
-      console.log("Formulário inválido, preencha corretamente e tente novamente.")
     }
   }
 

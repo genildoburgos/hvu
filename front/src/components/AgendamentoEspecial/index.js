@@ -102,7 +102,6 @@ function AgendamentoEspecial() {
   const handleTiposConsultaSelection = (event) => {
     const selectedTipo = JSON.parse(event.target.value);
     setSelectedTiposConsulta(selectedTipo);
-    console.log("selectedTipo:", selectedTipo);
   };
 
   const handleEspecialidadeSelection = (event) => {
@@ -148,7 +147,6 @@ function AgendamentoEspecial() {
       medico: { id: selectedMedico }
     };
 
-    console.log("agendamentoToCreate:", agendamentoToCreate);
 
     try {
       await createAgendamentoEspecial(agendamentoToCreate);

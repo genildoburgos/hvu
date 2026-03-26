@@ -48,7 +48,6 @@ function CreateEspecialidade() {
         const { name, value } = event.target;
         setEspecialidade({ ...especialidade, [name]: value });
     };
-    console.log(especialidade);
 
     const validateForm = () => {
         const errors = {};

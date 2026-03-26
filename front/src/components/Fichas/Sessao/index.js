@@ -125,7 +125,6 @@ function FichaSessao() {
                 const medicoCompletoData = await getMedicoById(medicoId);
                 //Armazena o objeto COMPLETO (que tem o CRMV) no estado
                 setMedicoLogado(medicoCompletoData);
-                console.log("Dados completos do médico logado:", medicoCompletoData);
             }
             } catch (error) {
                 console.error('Erro ao buscar usuário:', error);
@@ -202,9 +201,7 @@ function FichaSessao() {
         };
 
         try {
-            console.log(fichaData)
             const resultado = await createFicha(fichaData);
-            console.log("Resposta da api", resultado.id);
             localStorage.setItem('fichaId', resultado.id.toString());
             localStorage.removeItem("fichaSessaoFormData");
             setShowAlert(true);

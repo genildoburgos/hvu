@@ -256,7 +256,6 @@ function UpdateLaudoForm() {
       campoMicroscopia: laudo.campoMicroscopia.map((microscopia) => ({ id: microscopia.id })),
     }
 
-    console.log("laudotosend:", laudoToSend)
 
     try {
       await updateLaudoNecropsia(id, laudoToSend)

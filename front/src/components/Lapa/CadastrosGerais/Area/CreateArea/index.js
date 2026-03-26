@@ -88,7 +88,6 @@ function CreateArea() {
 
         try {
             const newArea = await createArea(areaToCreate);
-            console.log("new area: ", newArea);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao criar area:", error);

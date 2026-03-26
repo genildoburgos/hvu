@@ -141,7 +141,6 @@ function FichaMedicaRetorno() {
         const aId = router.query.agendamentoId; // Obtém o ID do agendamento da URL
         if (id) {
           setConsultaId(id);
-          console.log("ID da ficha:", id);
         }
         if (aId) {
           setAgendamentoId(aId); // Define o ID do agendamento

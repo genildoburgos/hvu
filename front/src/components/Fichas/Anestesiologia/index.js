@@ -144,7 +144,6 @@ export default function AnestesiologiaSteps() {
             }
     };
 
-    console.log("Enviando para API:", data);
 
     try {
       const resultado = await createFicha(data);

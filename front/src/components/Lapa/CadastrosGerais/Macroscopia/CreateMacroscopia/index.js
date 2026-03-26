@@ -72,7 +72,6 @@ const handleSubmit = async () => {
         return;
     }
 
-    console.log("Enviando campoLaudo:", campoLaudo); // Para debug
     try {
         await createCampoLaudo(campoLaudo);
         setShowAlert(true);

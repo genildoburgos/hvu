@@ -74,7 +74,6 @@ function UpdateAnimalBySecretarioAndMedico() {
     try {
       const userData = await getCurrentUsuario();
 
-      console.log("user:", userData)
 
       if (userData.roles && Array.isArray(userData.roles)) {
         if (userData.roles.includes("secretario")) {
@@ -84,7 +83,6 @@ function UpdateAnimalBySecretarioAndMedico() {
         }
       }
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -196,7 +194,6 @@ function UpdateAnimalBySecretarioAndMedico() {
       }
     };
 
-    console.log("Dados do animal a ser atualizado:", animalToUpdate);
     if (validateForm()) {
       if (id) {
         try {

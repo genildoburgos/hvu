@@ -153,11 +153,9 @@ function CreateTutorEnderecoFormLapa() {
         if (validateForm()) {
             try {
                 const responseRegister = await postRegister(tutorFormData.email, tutorFormData.nome, tutorFormData.senha, "tutor");
-                console.log(responseRegister);
     
                 await postLogin(tutorFormData.email, tutorFormData.senha);
                 const response = await createTutor(formData);
-                console.log(response);
     
                 setShowAlert(true);
             } catch (error) {
@@ -174,7 +172,6 @@ function CreateTutorEnderecoFormLapa() {
                 }
             }
         } else {
-            console.log("Formulário inválido. Corrija os erros.");
         }
     };
     

@@ -184,7 +184,6 @@ function CreateLaudoNecropsia() {
             campoMicroscopia: laudo.campoMicroscopia.map(microscopia => ({ id: microscopia.id }))
         };
 
-        console.log("laudoToSend:", laudoToSend);
         try {
             await createLaudoNecropsia(laudoToSend);
             setShowAlert(true);

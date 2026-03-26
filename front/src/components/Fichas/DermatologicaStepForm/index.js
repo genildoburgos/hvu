@@ -206,7 +206,6 @@ function DermatologicaSteps() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      console.log("Dados do formulário atualizados:", formData);
     }}, [formData]);
 
   // Obtém o ID da ficha da URL
@@ -216,7 +215,6 @@ function DermatologicaSteps() {
         const aId = router.query.agendamentoId; 
         if (id) {
           setConsultaId(id);
-          console.log("ID da ficha:", id);
         }
         if (aId) {
           setAgendamentoId(aId); 
@@ -536,7 +534,6 @@ function DermatologicaSteps() {
            }
         
     };
-    console.log("Dados enviados para o backend:", JSON.stringify(fichaData, null, 2));
     
 
     try {

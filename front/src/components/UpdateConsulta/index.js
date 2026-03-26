@@ -108,13 +108,11 @@ function UpdateConsulta() {
     setConsulta({ ...consulta, proximaConsulta: value === "true" });
   };
 
-  console.log("consulta:", consulta);
 
   const handleSubmit = async () => {
     try {
       await updateConsulta(id, consulta);
 
-      console.log("consultaToUpdate:", consulta);
       
       setShowAlert(true);
     } catch (error) {

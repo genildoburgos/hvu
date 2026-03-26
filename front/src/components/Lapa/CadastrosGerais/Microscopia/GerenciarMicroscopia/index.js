@@ -49,7 +49,6 @@ function GerenciarMicroscopia() {
         };
         fetchData();
     }, [deletedMicroscopiaId]); // Atualiza a lista ao excluir um campo
-    console.log(microscopias)
 
     const handleDeleteMicroscopia = async (microscopiaId) => {
         try {
