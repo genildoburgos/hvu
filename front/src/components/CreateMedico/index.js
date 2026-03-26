@@ -59,7 +59,7 @@ function CreateMedico() {
             setToken(storedToken || "");
             setRoles(storedRoles || []);
         }
-      }, []);
+    }, []);
 
     // Verifica se o usuário tem permissão
     if (!roles.includes("secretario")) {
@@ -72,11 +72,11 @@ function CreateMedico() {
 
     if (!token) {
         return (
-          <div className={styles.container}>
-            <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
-          </div>
+            <div className={styles.container}>
+                <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
+            </div>
         );
-      }
+    }
 
     const handleEspecialidadeSelection = (event) => {
         const especialidadeId = parseInt(event.target.value);
@@ -107,7 +107,7 @@ function CreateMedico() {
     const handleCreateMedico = async () => {
         event.preventDefault();
 
-       {/*} const validationErrors = validateFields(medico);
+        {/*} const validationErrors = validateFields(medico);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;

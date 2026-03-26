@@ -68,14 +68,14 @@ function GetAllCronograma() {
 
     if (!token) {
         return (
-          <div className={styles.container}>
-            <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
-          </div>
+            <div className={styles.container}>
+                <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
+            </div>
         );
-      }
+    }
 
     const filteredCronogramas = cronogramas.filter(cronograma =>
-        cronograma.nome.toLowerCase().includes(searchTerm.toLowerCase())
+        cronograma.nome?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleDeleteCronograma = async (cronogramaId) => {
@@ -100,7 +100,7 @@ function GetAllCronograma() {
                     placeholder={"Buscar agenda"}
                     onSearchChange={handleSearchChange}
                 />
-                <AdicionarCronograma page={`createCronograma/${id}`}/>
+                <AdicionarCronograma page={`createCronograma/${id}`} />
             </div>
 
             {filteredCronogramas.length === 0 ? (
@@ -120,7 +120,7 @@ function GetAllCronograma() {
                             <div className={styles.button_box}>
                                 <button
                                     className={styles.acessar_button}
-                                    onClick={() => router.push(`/getCronogramaById/${cronograma.id}`)} 
+                                    onClick={() => router.push(`/getCronogramaById/${cronograma.id}`)}
                                 >
                                     Visualizar
                                 </button>
@@ -132,7 +132,7 @@ function GetAllCronograma() {
             )}
             {showAlert && <ErrorAlert message="Agenda excluída com sucesso!" show={showAlert} />}
             {showErrorAlert && <ErrorAlert message="Erro ao excluir agenda, tente novamente" show={showErrorAlert} />}
-            
+
         </div>
     );
 }

@@ -27,7 +27,7 @@ function UpdateMedico() {
     const [showErrorAlert, setShowErrorAlert] = useState(false);
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
 
     const [medico, setMedico] = useState({
         nome: "",
@@ -78,7 +78,7 @@ function UpdateMedico() {
     const handleEspecialidadeSelection = (event) => {
         const especialidadeId = parseInt(event.target.value);
         const especialidadeSelected = especialidades.find(espec => espec.id === especialidadeId);
-    
+
         // Verifica se a especialidade já está selecionada
         if (!selectedEspecialidades.some(espec => espec.id === especialidadeId)) {
             // Adiciona a especialidade selecionada ao estado
@@ -190,43 +190,43 @@ function UpdateMedico() {
             newErrors.nome = "Campo obrigatório";
         }
         if (!medico.email) {
-            newErrors.email = "Campo obrigatório"; 
+            newErrors.email = "Campo obrigatório";
         }
         if (!/\S+@\S+\.\S+/.test(medico.email)) {
             newErrors.email = "E-mail inválido";
         }
         if (!medico.cpf) {
-            newErrors.cpf = "Campo obrigatório"; 
+            newErrors.cpf = "Campo obrigatório";
         }
         if (!medico.telefone) {
-            newErrors.telefone = "Campo obrigatório"; 
+            newErrors.telefone = "Campo obrigatório";
         }
         if (!medico.crmv) {
-            newErrors.crmv = "Campo obrigatório"; 
+            newErrors.crmv = "Campo obrigatório";
         }
         if (selectedEspecialidades.length === 0) {
-            newErrors.especialidade = "Selecione pelo menos uma especialidade."; 
+            newErrors.especialidade = "Selecione pelo menos uma especialidade.";
         }
         if (!medico.endereco.cep) {
-            newErrors.cep = "Campo obrigatório"; 
+            newErrors.cep = "Campo obrigatório";
         }
         if (!medico.endereco.rua) {
-            newErrors.rua = "Campo obrigatório"; 
+            newErrors.rua = "Campo obrigatório";
         }
         if (!medico.endereco.estado) {
-            newErrors.estado = "Campo obrigatório"; 
+            newErrors.estado = "Campo obrigatório";
         }
         if (!medico.endereco.cidade) {
-            newErrors.cidade = "Campo obrigatório"; 
+            newErrors.cidade = "Campo obrigatório";
         }
         if (!medico.endereco.numero) {
-            newErrors.numero = "Campo obrigatório"; 
+            newErrors.numero = "Campo obrigatório";
         }
         if (!medico.endereco.bairro) {
-            newErrors.bairro = "Campo obrigatório"; 
+            newErrors.bairro = "Campo obrigatório";
         }
         setErrors(newErrors);
-    
+
         return Object.keys(newErrors).length === 0;
     };
 
@@ -258,11 +258,11 @@ function UpdateMedico() {
 
         try {
             await updateMedico(id, MedicoToUpdate);
-            setShowAlert(true); 
+            setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar medico:", error);
             console.log("Erro ao editar informações. Por favor, tente novamente.");
-            setShowErrorAlert(true);   
+            setShowErrorAlert(true);
         }
     };
 

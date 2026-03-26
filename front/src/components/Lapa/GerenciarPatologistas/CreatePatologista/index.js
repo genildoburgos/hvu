@@ -58,7 +58,7 @@ function CreatePatologista() {
             setToken(storedToken || "");
             setRoles(storedRoles || []);
         }
-      }, []);
+    }, []);
 
     if (!roles.includes("admin_lapa")) {
         return (
@@ -70,9 +70,9 @@ function CreatePatologista() {
 
     if (!token) {
         return (
-          <div className={styles.container}>
-            <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
-          </div>
+            <div className={styles.container}>
+                <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
+            </div>
         );
     }
 

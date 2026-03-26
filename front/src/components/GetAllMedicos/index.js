@@ -16,7 +16,7 @@ function GetAllMedicos() {
     const [deletedMedicoId, setDeletedMedicoId] = useState(null); // Estado para controlar o ID do médico excluído recentemente
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
 
     const router = useRouter();
 
@@ -59,18 +59,18 @@ function GetAllMedicos() {
 
     if (!token) {
         return (
-          <div className={styles.container}>
-            <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
-          </div>
+            <div className={styles.container}>
+                <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
+            </div>
         );
-      }
+    }
 
     const handleSearchChange = (term) => {
         setSearchTerm(term);
     };
 
     const filteredMedicos = medicos.filter(medico =>
-        medico.nome.toLowerCase().includes(searchTerm.toLowerCase())
+        medico.nome?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleDeleteMedico = async (medicoId) => {
@@ -97,7 +97,7 @@ function GetAllMedicos() {
                     placeholder={"Buscar veterinário(a)"}
                     onSearchChange={handleSearchChange}
                 />
-                <AdicionarMedicoWhiteButton/>
+                <AdicionarMedicoWhiteButton />
             </div>
 
             {filteredMedicos.length === 0 ? (
@@ -126,7 +126,7 @@ function GetAllMedicos() {
                             <div className={styles.button_box}>
                                 <button
                                     className={styles.acessar_button}
-                                    onClick={() => router.push(`/getMedicoById/${medico.id}`)} 
+                                    onClick={() => router.push(`/getMedicoById/${medico.id}`)}
                                 >
                                     Visualizar
                                 </button>

@@ -108,12 +108,7 @@ export default function AgendamentosByMedico() {
     );
   }
 
-  // Função para filtrar os agendamentos com base no nome do animal
-  const filteredAgendamentos = agendamentos.filter(
-    (agendamento) =>
-      agendamento.animal &&
-      agendamento.animal.nome.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+
 
   const compareDates = (a, b) => {
     const dateA = new Date(a.dataVaga);
