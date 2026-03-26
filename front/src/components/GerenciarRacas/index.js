@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';  
+import { useRouter } from 'next/router';
 import styles from "./index.module.css";
 import SearchBar from '../SearchBar';
 import { getAllRaca, deleteRaca } from '../../../services/racaService';
@@ -17,9 +17,9 @@ function GerenciarRacasList() {
     const [deletedRacaId, setDeletedRacaId] = useState(null); // Estado para controlar o ID da raça excluída recentemente
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
     const [accessDenied, setAccessDenied] = useState(false);
-    
+
     const router = useRouter();
 
     useEffect(() => {
@@ -29,7 +29,7 @@ function GerenciarRacasList() {
             setToken(storedToken || "");
             setRoles(storedRoles || []);
         }
-      }, []);
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -71,11 +71,13 @@ function GerenciarRacasList() {
     }
 
     const handleDeleteRaca = async (racaId) => {
+        setShowErrorAlert(false);
+        setShowAlert(false);
         try {
             await deleteRaca(racaId);
             setRacas(racas.filter(raca => raca.id !== racaId));
             setDeletedRacaId(racaId); // Atualiza o estado para acionar a recuperação da lista
-            setShowAlert(true); 
+            setShowAlert(true);
         } catch (error) {
             console.error('Erro ao excluir a raça:', error);
             if (error.response && error.response.status === 409) {
@@ -126,14 +128,14 @@ function GerenciarRacasList() {
                                 <h6>Raça</h6>
                                 <p>{raca.nome}</p>
                             </div>
-                            <div  className={styles.button_container}>
+                            <div className={styles.button_container}>
                                 <button
                                     className={styles.editar_button}
                                     onClick={() => router.push(`/updateRaca/${raca.id}`)}
                                 >
                                     Editar
                                 </button>
-                                <ExcluirButton itemId={raca.id} onDelete={handleDeleteRaca} /> 
+                                <ExcluirButton itemId={raca.id} onDelete={handleDeleteRaca} />
                             </div>
                         </li>
                     ))}

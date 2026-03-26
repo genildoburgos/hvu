@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';  
+import { useRouter } from 'next/router';
 import styles from "./index.module.css";
 import SearchBar from '../SearchBar';
 import { getAllAviso, deleteAviso } from '../../../services/avisoService';
@@ -15,8 +15,8 @@ function GerenciarAvisos() {
     const [deletedAvisoId, setDeletedAvisoId] = useState(null); // Estado para controlar o ID da raça excluída recentemente
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
-    const [loading, setLoading] = useState(true); 
-    
+    const [loading, setLoading] = useState(true);
+
     const router = useRouter();
 
     useEffect(() => {
@@ -26,7 +26,7 @@ function GerenciarAvisos() {
             setToken(storedToken || "");
             setRoles(storedRoles || []);
         }
-      }, []);
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,7 +40,7 @@ function GerenciarAvisos() {
             }
         };
         fetchData();
-    }, [deletedAvisoId]); 
+    }, [deletedAvisoId]);
 
     // Verifica se os dados estão carregando
     if (loading) {
@@ -65,11 +65,13 @@ function GerenciarAvisos() {
     }
 
     const handleDeleteAviso = async (avisoId) => {
+        setShowErrorAlert(false);
+        setShowAlert(false);
         try {
             await deleteAviso(avisoId);
             setAvisos(avisos.filter(aviso => aviso.id !== avisoId));
             setDeletedAvisoId(avisoId); // Atualiza o estado para acionar a recuperação da lista
-            setShowAlert(true); 
+            setShowAlert(true);
         } catch (error) {
             console.error('Erro ao excluir aviso:', error);
             if (error.response && error.response.status === 409) {
@@ -104,21 +106,21 @@ function GerenciarAvisos() {
                                 <h6>Aviso - {aviso.habilitado ? "habilitado" : "desabilitado"}</h6>
                                 <div>{aviso.texto}</div>
                             </div>
-                            <div  className={styles.button_container}>
+                            <div className={styles.button_container}>
                                 <button
                                     className={styles.editar_button}
                                     onClick={() => router.push(`/updateAviso/${aviso.id}`)}
                                 >
                                     Editar
                                 </button>
-                                <ExcluirButton itemId={aviso.id} onDelete={handleDeleteAviso} /> 
+                                <ExcluirButton itemId={aviso.id} onDelete={handleDeleteAviso} />
                             </div>
                         </li>
                     ))}
                 </ul>
             )}
             {showAlert && <ErrorAlert message="Aviso excluída com sucesso!" show={showAlert} />}
-            {showErrorAlert && <ErrorAlert message="Esta Aviso não pode ser excluída por estar associada a um animal." show={showErrorAlert} />}
+            {showErrorAlert && <ErrorAlert message="Este aviso não pode ser excluído por estar associado a um cargo/perfil." show={showErrorAlert} />}
 
         </div>
     );
