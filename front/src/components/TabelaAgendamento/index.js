@@ -33,7 +33,8 @@ export default function TabelaAgendamento({
 
 	const handleReagendamento = async (e) => {
 		e.preventDefault();
-		try {
+		setShowErrorAlert(false);
+        try {
 			if (!id || !vagaSelecionada) {
 				throw new Error("Agendamento ID ou vaga selecionada não encontrada.");
 			}

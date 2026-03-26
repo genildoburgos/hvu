@@ -25,6 +25,7 @@ function UpdateMedico() {
     const [selectedEspecialidades, setSelectedEspecialidades] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
     const [loading, setLoading] = useState(true);
@@ -60,7 +61,8 @@ function UpdateMedico() {
     useEffect(() => {
         if (id) {
             const fetchData = async () => {
-                try {
+                setShowErrorAlert(false);
+        try {
                     const MedicoData = await getMedicoById(id);
                     setMedico(MedicoData);
                     // Pré-seleciona as especialidades do médico
@@ -138,6 +140,7 @@ function UpdateMedico() {
     };
 
     const fetchCepData = async (cep) => {
+        setShowErrorAlert(false);
         try {
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();
@@ -157,8 +160,10 @@ function UpdateMedico() {
                 console.error("CEP não encontrado.");
             }
         } catch (error) {
-            console.error("Erro ao buscar CEP:", error);
-        }
+                console.error("Erro ao buscar CEP:", error);
+                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
+                
+            }
     };
 
     const handleCepChange = (event) => {
@@ -254,11 +259,21 @@ function UpdateMedico() {
         };
 
 
+        setShowErrorAlert(false);
         try {
             await updateMedico(id, MedicoToUpdate);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar medico:", error);
+            
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
             setShowErrorAlert(true);
         }
     };
@@ -370,7 +385,7 @@ function UpdateMedico() {
 
             </form>
             {<Alert message="Informações do(a) veterinário(a) editadas com sucesso!" show={showAlert} url={`/getMedicoById/${id}`} />}
-            {showErrorAlert && <ErrorAlert message="Erro ao editar informações do(a) veterinário(a), tente novamente." show={showErrorAlert} />}
+            {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao editar informações do(a) veterinário(a), tente novamente."} show={showErrorAlert} />}
         </div>
     );
 }

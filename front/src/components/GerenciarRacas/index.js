@@ -7,12 +7,14 @@ import VoltarButton from '../VoltarButton';
 import ExcluirButton from '../ExcluirButton';
 import FilterEspecieRaca from '../FilterEspecieRaca';
 import ErrorAlert from "../ErrorAlert";
+import Alert from '../Alert';
 
 function GerenciarRacasList() {
     const [racas, setRacas] = useState([]);
     const [filtro, setFiltro] = useState('especie');
     const [searchTerm, setSearchTerm] = useState('');
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [deletedRacaId, setDeletedRacaId] = useState(null); // Estado para controlar o ID da raça excluída recentemente
     const [roles, setRoles] = useState([]);
@@ -80,7 +82,16 @@ function GerenciarRacasList() {
             setShowAlert(true);
         } catch (error) {
             console.error('Erro ao excluir a raça:', error);
-            if (error.response && error.response.status === 409) {
+            if (error) {
+
+                const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                    setErrorMessage("Esta raça não pode ser excluída por estar associada a um animal.");
+                }
                 setShowErrorAlert(true);
             }
         }
@@ -141,8 +152,8 @@ function GerenciarRacasList() {
                     ))}
                 </ul>
             )}
-            {showAlert && <ErrorAlert message="Raça excluída com sucesso!" show={showAlert} />}
-            {showErrorAlert && <ErrorAlert message="Esta raça não pode ser excluída por estar associada a um animal." show={showErrorAlert} />}
+            {showAlert && <Alert message="Raça excluída com sucesso!" show={showAlert} />}
+            {showErrorAlert && <ErrorAlert message={errorMessage} show={showErrorAlert} />}
 
         </div>
     );

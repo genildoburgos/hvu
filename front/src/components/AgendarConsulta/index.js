@@ -40,6 +40,7 @@ const HorariosSemana = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -104,6 +105,7 @@ const HorariosSemana = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setShowErrorAlert(false);
       try {
         const AnimaisData = await getAllAnimalTutor();
         setAnimais(AnimaisData);
@@ -116,6 +118,7 @@ const HorariosSemana = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setShowErrorAlert(false);
       try {
         const VagasData = await getAllVaga();
         setVagas(VagasData);
@@ -130,6 +133,7 @@ const HorariosSemana = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setShowErrorAlert(false);
       try {
         const user = await getCurrentUsuario();
         const datas = await getDatasNaoPodeAgendar(user.usuario.id);
@@ -145,6 +149,7 @@ const HorariosSemana = () => {
     let isMounted = true;
 
     const fetchData = async () => {
+      setShowErrorAlert(false);
       try {
         const data = await getRetornoByAnimalId(selectedAnimal.id);
         if (isMounted) {
@@ -247,6 +252,7 @@ const HorariosSemana = () => {
       status: "Agendado",
     };
 
+    setShowErrorAlert(false);
     try {
       const newAgendamento = await createAgendamento(
         agendamentoToCreate,
@@ -255,6 +261,15 @@ const HorariosSemana = () => {
       setShowAlert(true);
     } catch (error) {
       console.error("Erro ao agendar consulta:", error);
+
+      const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+        setErrorMessage("Erro ao realizar agendamento, tente novamente.");
+      }
       setShowErrorAlert(true);
     }
   };
@@ -568,7 +583,7 @@ const HorariosSemana = () => {
       }
       {showErrorAlert && (
         <ErrorAlert
-          message="Erro ao realizar agendamento, tente novamente."
+          message={errorMessage}
           show={showErrorAlert}
         />
       )}

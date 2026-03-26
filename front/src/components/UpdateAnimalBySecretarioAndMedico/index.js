@@ -16,6 +16,7 @@ function UpdateAnimalBySecretarioAndMedico() {
 
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
   const [errors, setErrors] = useState({});
 
@@ -47,6 +48,7 @@ function UpdateAnimalBySecretarioAndMedico() {
   useEffect(() => {
     if (id) {
       const fetchData = async () => {
+        setShowErrorAlert(false);
         try {
           const animal = await getAnimalById(id);
           setAnimalData(animal);
@@ -71,7 +73,8 @@ function UpdateAnimalBySecretarioAndMedico() {
   }, [selectedEspecie, racas]);
 
   const loadUrl = async () => {
-    try {
+    setShowErrorAlert(false);
+        try {
       const userData = await getCurrentUsuario();
 
 
@@ -95,7 +98,8 @@ function UpdateAnimalBySecretarioAndMedico() {
   };
 
   const handleAnimalChange = (event) => {
-    try {
+    setShowErrorAlert(false);
+        try {
       const { name, value } = event.target;
       setAnimalData({ ...animalData, [name]: value });
     } catch (error) {
@@ -104,7 +108,8 @@ function UpdateAnimalBySecretarioAndMedico() {
   };
 
   const handleEspecieSelection = (event) => {
-    try {
+    setShowErrorAlert(false);
+        try {
       const selectedEspecieId = event.target.value;
 
       setSelectedEspecie(selectedEspecieId);
@@ -117,7 +122,8 @@ function UpdateAnimalBySecretarioAndMedico() {
   };
 
   const handleRacaSelection = (event) => {
-    try {
+    setShowErrorAlert(false);
+        try {
       const selectedRacaId = event.target.value;
       setSelectedRaca(selectedRacaId); // Ajuste aqui
     } catch (error) {
@@ -196,13 +202,23 @@ function UpdateAnimalBySecretarioAndMedico() {
 
     if (validateForm()) {
       if (id) {
+        setShowErrorAlert(false);
         try {
           await updateAnimal(id, animalToUpdate);
           setShowAlert(true);
           loadUrl();
         } catch (error) {
           console.error('Erro ao atualizar o animal:', error);
-          setShowErrorAlert(true);
+          
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
+            setShowErrorAlert(true);
         }
       }
     }
@@ -348,7 +364,7 @@ function UpdateAnimalBySecretarioAndMedico() {
         </ul>
       </form>
       {<Alert message="Informações do animal editadas com sucesso!" show={showAlert} url={url || (roles.includes('secretario') ? '/pacientesBySecretario' : `/getAnimalByIdByMedico/${id}`)} />}
-      {showErrorAlert && <ErrorAlert message="Erro ao editar informações do animal, tente novamente." show={showErrorAlert} />}
+      {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao editar informações do animal, tente novamente."} show={showErrorAlert} />}
     </div>
   );
 }

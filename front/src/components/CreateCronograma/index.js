@@ -16,6 +16,7 @@ function CreateCronograma() {
 
     const [showAlert, setShowAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [errors, setErrors] = useState({});
 
@@ -207,11 +208,21 @@ function CreateCronograma() {
             especialidade: { id: parseInt(selectedEspecialidade) }
         };
 
+        setShowErrorAlert(false);
         try {
             await createCronograma(cronogramaToCreate);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao criar agenda:", error);
+            
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
             setShowErrorAlert(true);
         }
     };
@@ -614,7 +625,7 @@ function CreateCronograma() {
 
             </form>
             {<Alert message="Agenda criada com sucesso!" show={showAlert} url={`/getAllCronograma/${selectedMedico}`} />}   
-            {showErrorAlert && <ErrorAlert message="Erro ao criar agenda, tente novamente." show={showErrorAlert} />}
+            {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao criar agenda, tente novamente."} show={showErrorAlert} />}
         </div>
     );
 }

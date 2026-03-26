@@ -25,6 +25,7 @@ function CreateAnimalForm() {
 
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
   const [roles, setRoles] = useState([]);
   const [token, setToken] = useState("");
@@ -50,7 +51,8 @@ function CreateAnimalForm() {
 
   useEffect(() => {
     async function fetchAnimais() {
-      try {
+      setShowErrorAlert(false);
+        try {
         const response = await getAnimalByTutor();
         setAnimaisDoTutor(response);
       } catch (error) {
@@ -197,6 +199,7 @@ function CreateAnimalForm() {
           };
         }
 
+        setShowErrorAlert(false);
         try {
           const newAnimal = await createAnimal(animalToCreate);
           resetForm();
@@ -204,7 +207,16 @@ function CreateAnimalForm() {
         } catch (error) {
           console.error("Erro ao criar animal:", error);
           resetForm();
-          setShowErrorAlert(true);
+          
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
+            setShowErrorAlert(true);
         }
       } else {
       }
@@ -344,7 +356,7 @@ function CreateAnimalForm() {
         </div>
       </form>
       {<Alert message="Animal cadastrado com sucesso!" show={showAlert} url='/meusAnimais' />}
-      {showErrorAlert && <ErrorAlert message="Erro ao realizar cadastro, tente novamente." show={showErrorAlert} />}
+      {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao realizar cadastro, tente novamente."} show={showErrorAlert} />}
     </div>
   );
 }

@@ -15,6 +15,7 @@ function UpdateEspecialidade() {
 
     const [showAlert, setShowAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [especialidade, setEspecialidade] = useState({});
 
@@ -34,7 +35,8 @@ function UpdateEspecialidade() {
     useEffect(() => {
         if (id) {
             const fetchData = async () => {
-                try {
+                setShowErrorAlert(false);
+        try {
                     const especialidadeData = await getEspecialidadeById(id);
                     setEspecialidade(especialidadeData);
 
@@ -91,11 +93,21 @@ function UpdateEspecialidade() {
           return;
         }
 
+        setShowErrorAlert(false);
         try {
             await updateEspecialidade(especialidade.id, especialidade);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar especialidade:", error);
+            
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
             setShowErrorAlert(true);
         }
     };
@@ -128,7 +140,7 @@ function UpdateEspecialidade() {
                 </div>
             </form>
             {<Alert message="Informações da especialidade editadas com sucesso!" show={showAlert} url={`/gerenciarEspecialidades`} />}
-            {showErrorAlert && <ErrorAlert message="Erro ao editar informações da especialidade, tente novamente." show={showErrorAlert} />}
+            {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao editar informações da especialidade, tente novamente."} show={showErrorAlert} />}
         </div>
     );
 }

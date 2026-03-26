@@ -39,7 +39,8 @@ function FichaMedicaRetorno() {
     useEffect(() => {
         const fetchDataForPDF = async () => {
             if (!animalId) return;
-            try {
+            setShowErrorAlert(false);
+        try {
                 const [animalData, tutorData, userData] = await Promise.all([getAnimalById(animalId), getTutorByAnimal(animalId), getCurrentUsuario()]);
                 setAnimal(animalData);
                 setTutor(tutorData);
@@ -180,6 +181,7 @@ function FichaMedicaRetorno() {
     if (!fichaId) return;
 
     const fetchData = async () => {
+        setShowErrorAlert(false);
         try {
             const formData = await getFichaById(fichaId);
             setFormData(JSON.parse(formData.conteudo));
@@ -204,7 +206,8 @@ function FichaMedicaRetorno() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
+      setShowErrorAlert(false);
+        try {
         const userData = await getCurrentUsuario();
         setUserId(userData.usuario.id);
       } catch (error) {
@@ -252,7 +255,8 @@ function FichaMedicaRetorno() {
       agendamento: { id: Number(agendamentoId) }
     };
 
-    try {
+    setShowErrorAlert(false);
+        try {
         await updateFicha(fichaData, fichaId);
         setShowAlert(true);
     } catch (error) {

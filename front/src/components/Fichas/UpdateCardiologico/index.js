@@ -65,6 +65,7 @@ function UpdateCardiologicaSteps() {
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(true);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);

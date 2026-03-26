@@ -103,7 +103,8 @@ function FichaAtoCirurgico() {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
+            setShowErrorAlert(false);
+        try {
                 const userData = await getCurrentUsuario();
                  const medicoId = userData.usuario.id;
 
@@ -144,14 +145,16 @@ function FichaAtoCirurgico() {
         if (!animalId) return;
 
         const fetchData = async () => {
-            try {
+            setShowErrorAlert(false);
+        try {
                 const animalData = await getAnimalById(animalId);
                 setAnimal(animalData);
             } catch (error) {
                 console.error('Erro ao buscar animal:', error);
             }
 
-            try {
+            setShowErrorAlert(false);
+        try {
                 const tutorData = await getTutorByAnimal(animalId);
                 setTutor(tutorData);
             } catch (error) {
@@ -217,6 +220,7 @@ function FichaAtoCirurgico() {
         };
 
 
+        setShowErrorAlert(false);
         try {
             const resultado = await createFicha(fichaData);
             localStorage.setItem('fichaId', resultado.id.toString());
@@ -470,7 +474,7 @@ function FichaAtoCirurgico() {
                 {showAlert && consultaId && (
                     <Alert message="Ficha criada com sucesso!" show={showAlert} url={`/createConsulta/${consultaId}`} />
                 )}
-                {showErrorAlert && (<ErrorAlert message="Erro ao criar ficha" show={showErrorAlert} />)}
+                {showErrorAlert && (<ErrorAlert message={errorMessage || "Erro ao criar ficha"} show={showErrorAlert} />)}
             </div>
         </div>
     )

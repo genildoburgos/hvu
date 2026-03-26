@@ -16,6 +16,7 @@ function ReagendarConsulta() {
 
 	const [showAlert, setShowAlert] = useState(false);
 	const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 	const [vagas, setVagas] = useState([]);
 	const [vagasFiltradas, setVagasFiltradas] = useState([]);
 	const [novaData, setNovaData] = useState("");
@@ -164,7 +165,7 @@ function ReagendarConsulta() {
 			/>
 			{showErrorAlert && (
 				<ErrorAlert
-					message="Erro ao realizar reagendamento, tente novamente."
+					message={errorMessage || "Erro ao realizar reagendamento, tente novamente."}
 					show={showErrorAlert}
 				/>
 			)}

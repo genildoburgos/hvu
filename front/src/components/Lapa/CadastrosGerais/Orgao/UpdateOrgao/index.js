@@ -17,6 +17,7 @@ function UpdateOrgao() {
   const [errors, setErrors] = useState({});
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
   const [orgao, setOrgao] = useState({
     id: null,
   //  image_path: "",
@@ -47,6 +48,7 @@ function UpdateOrgao() {
   useEffect(() => {
     if (router.isReady && id) {
       const fetchData = async () => {
+        setShowErrorAlert(false);
         try {
           const orgaoData = await getOrgaoById(id);
           setOrgao({
@@ -104,12 +106,22 @@ function UpdateOrgao() {
       setErrors(validationErrors);
       return;
     }
-    try {
+    setShowErrorAlert(false);
+        try {
       await updateOrgao(orgao.id, orgao);
       setShowAlert(true);
     } catch (error) {
       console.error("Erro ao editar órgão:", error);
-      setShowErrorAlert(true);
+      
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
+            setShowErrorAlert(true);
     }
   };
 
@@ -258,7 +270,7 @@ function UpdateOrgao() {
       )}
       {showErrorAlert && (
         <ErrorAlert
-          message="Erro ao editar informações do órgão, tente novamente."
+          message={errorMessage || "Erro ao editar informações do órgão, tente novamente."}
           show={showErrorAlert}
         />
       )}

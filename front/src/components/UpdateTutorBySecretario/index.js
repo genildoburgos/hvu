@@ -21,6 +21,7 @@ function UpdateTutorBySecretario() {
     const [confirmarSenhaErro, setConfirmarSenhaErro] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const [tutor, setTutor] = useState({});
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
@@ -38,7 +39,8 @@ function UpdateTutorBySecretario() {
     useEffect(() => {
         if (id) {
             const fetchData = async () => {
-                try {
+                setShowErrorAlert(false);
+        try {
                     const TutorData = await getTutorById(id);
                     setTutor(TutorData);
                 } catch (error) {
@@ -90,6 +92,7 @@ function UpdateTutorBySecretario() {
     };
 
     const fetchCepData = async (cep) => {
+        setShowErrorAlert(false);
         try {
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();
@@ -109,8 +112,10 @@ function UpdateTutorBySecretario() {
                 console.error("CEP não encontrado.");
             }
         } catch (error) {
-            console.error("Erro ao buscar CEP:", error);
-        }
+                console.error("Erro ao buscar CEP:", error);
+                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
+                
+            }
     };
 
     const handleCepChange = (event) => {
@@ -195,11 +200,21 @@ function UpdateTutorBySecretario() {
             }
         };
 
+        setShowErrorAlert(false);
         try {
             await updateTutor(id, TutorToUpdate);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar tutor:", error);
+            
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
             setShowErrorAlert(true);
         }
     };
@@ -281,7 +296,7 @@ function UpdateTutorBySecretario() {
 
             </form>
             {<Alert message="Informações do(a) tutor(a) editadas com sucesso!" show={showAlert} url={`/pacientesBySecretario`} />}
-            {showErrorAlert && <ErrorAlert message="Erro ao editar informações do(a) tutor(a), tente novamente." show={showErrorAlert} />}
+            {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao editar informações do(a) tutor(a), tente novamente."} show={showErrorAlert} />}
         </div>
     );
 }

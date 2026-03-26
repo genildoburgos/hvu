@@ -15,6 +15,7 @@ function UpdateEspecie() {
 
     const [showAlert, setShowAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [especie, setEspecie] = useState({});
 
@@ -34,7 +35,8 @@ function UpdateEspecie() {
     useEffect(() => {
         if (id) {
             const fetchData = async () => {
-                try {
+                setShowErrorAlert(false);
+        try {
                     const especieData = await getEspecieById(id);
                     setEspecie(especieData);
 
@@ -91,11 +93,21 @@ function UpdateEspecie() {
           return;
         }
 
+        setShowErrorAlert(false);
         try {
             await updateEspecie(especie.id, especie);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar espécie:", error);
+            
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
             setShowErrorAlert(true);
         }
     };
@@ -128,7 +140,7 @@ function UpdateEspecie() {
                 </div>
             </form>
             {<Alert message="Informações da espécie editadas com sucesso!" show={showAlert} url={`/gerenciarEspecies`} />}
-            {showErrorAlert && <ErrorAlert message="Erro ao editar informações da espécie, tente novamente." show={showErrorAlert} />}
+            {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao editar informações da espécie, tente novamente."} show={showErrorAlert} />}
         </div>
     );
 }

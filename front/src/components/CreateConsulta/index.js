@@ -22,6 +22,7 @@ const useFichaManager = () => {
     if (typeof window !== "undefined") {
       const storedIds = localStorage.getItem("fichaIds");
       if (storedIds) {
+        setShowErrorAlert(false);
         try {
           const parsedIds = JSON.parse(storedIds);
           if (Array.isArray(parsedIds)) {
@@ -241,6 +242,7 @@ function CreateConsulta() {
   const { fichaIds, addFichaId, setFichaIds } = useFichaManager();
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
   const [showAlertFicha, setShowAlertFicha] = useState(false);
   const [roles, setRoles] = useState([]);
   const [token, setToken] = useState("");
@@ -290,7 +292,8 @@ function CreateConsulta() {
 
     const fetchHistorico = async () => {
       setLoadingHistorico(true);
-      try {
+      setShowErrorAlert(false);
+        try {
         const consultasData = await getConsultaByAnimal(animalId);
         setHistoricoConsultas(consultasData);
       } catch (error) {
@@ -311,7 +314,8 @@ function CreateConsulta() {
   if (typeof window !== "undefined") {
     const savedData = localStorage.getItem('consultaFormData');
     if (savedData) {
-      try {
+      setShowErrorAlert(false);
+        try {
         const parsedData = JSON.parse(savedData);
         // Atualiza o estado 'consulta' com os dados salvos
         setConsulta(parsedData);
@@ -335,7 +339,8 @@ useEffect(() => {
 
   useEffect(() => {
     const fetchFichas = async () => {
-      try {
+      setShowErrorAlert(false);
+        try {
         const fetchedFichas = await Promise.all(
           fichaIds.map((id) => getFichaById(id))
         );
@@ -377,6 +382,7 @@ useEffect(() => {
   useEffect(() => {
     if (id) {
       const fetchData = async () => {
+        setShowErrorAlert(false);
         try {
                 const vagaJson = await getVagaById(id);
                 setVagaData(vagaJson);
@@ -392,7 +398,16 @@ useEffect(() => {
 
         } catch (error) {
           console.error("Erro ao buscar vaga:", error);
-          setShowErrorAlert(true);
+          
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
+            setShowErrorAlert(true);
         } finally {
           setLoading(false);
         }
@@ -495,7 +510,8 @@ useEffect(() => {
       setErrors(validationErrors);
       return;
     }
-    try {
+    setShowErrorAlert(false);
+        try {
       await createConsulta(consultaToCreate, id);
       // Limpa os dados salvos do localStorage após o sucesso
       localStorage.removeItem('consultaFormData');
@@ -504,7 +520,16 @@ useEffect(() => {
       setShowAlert(true);
     } catch (error) {
       console.error("Erro ao criar consulta:", error);
-      setShowErrorAlert(true);
+      
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
+            setShowErrorAlert(true);
     }
   };
   const nomeMedico = vagaData?.medico?.nome;
@@ -537,7 +562,8 @@ useEffect(() => {
   };
 
   const handleDelete = async (id) => {
-    try {
+    setShowErrorAlert(false);
+        try {
       await deleteFicha(id);
       setFichas((prev) => prev.filter((ficha) => ficha.id !== id));
       setFichaIds((prev) => {
@@ -551,7 +577,16 @@ useEffect(() => {
       }
     } catch (error) {
       console.error("Erro ao deletar ficha:", error);
-      setShowErrorAlert(true);
+      
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
+            setShowErrorAlert(true);
     }
   };
 
@@ -1089,14 +1124,14 @@ useEffect(() => {
         {vagaData.consulta === null ? (
           showErrorAlert && (
             <ErrorAlert
-              message="Erro ao criar consulta, tente novamente."
+              message={errorMessage || "Erro ao criar consulta, tente novamente."}
               show={showErrorAlert}
             />
           )
         ) : (
           showErrorAlert && (
             <ErrorAlert
-              message="Consulta já foi criada, tente editá-la."
+              message={errorMessage || "Consulta já foi criada, tente editá-la."}
               show={showErrorAlert}
             />
           )

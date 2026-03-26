@@ -25,6 +25,7 @@ function AgendamentoEspecial() {
 
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState({});
   const [agendamento, setAgendamento] = useState({
     animal: { id: null },
@@ -62,6 +63,7 @@ function AgendamentoEspecial() {
     const fetchTutores = async () => {
       const tutoresTemp = {};
       for (const animal of animais) {
+        setShowErrorAlert(false);
         try {
           const tutor = await getTutorByAnimal(animal.id, token);
           tutoresTemp[animal.id] = { nome: tutor.nome, cpf: tutor.cpf };
@@ -148,12 +150,22 @@ function AgendamentoEspecial() {
     };
 
 
-    try {
+    setShowErrorAlert(false);
+        try {
       await createAgendamentoEspecial(agendamentoToCreate);
       setShowAlert(true);
     } catch (error) {
       console.error("Erro ao criar agendamento especial:", error);
-      setShowErrorAlert(true);
+      
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
+            setShowErrorAlert(true);
     }
   };
 
@@ -388,7 +400,7 @@ function AgendamentoEspecial() {
           </div>
         </form>
         {<Alert message="Agendamento criado com sucesso!" show={showAlert} url='/agendamentosDia' />}
-        {showErrorAlert && <ErrorAlert message="Erro ao realizar agendamento, tente novamente." show={showErrorAlert} />}
+        {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao realizar agendamento, tente novamente."} show={showErrorAlert} />}
       </div>
     </>
   );
