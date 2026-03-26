@@ -65,7 +65,6 @@ function FichaNeurologica({ formData, handleChange, nextStep, prevStep }) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("Formulário válido. Dados prontos para envio:", formData);
         nextStep();
     };
 

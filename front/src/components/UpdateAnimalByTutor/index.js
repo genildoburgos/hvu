@@ -18,6 +18,7 @@ function UpdateAnimalByTutor() {
 
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
   const { especies, error: especiesError } = EspeciesList();
   const { racas, error: racasError } = RacasList();
@@ -46,7 +47,8 @@ function UpdateAnimalByTutor() {
 
   useEffect(() => {
     async function fetchAnimais() {
-      try {
+      setShowErrorAlert(false);
+        try {
         const response = await getAnimalByTutor();
         setAnimaisDoTutor(response);
       } catch (error) {
@@ -59,6 +61,7 @@ function UpdateAnimalByTutor() {
   useEffect(() => {
     if (id) {
       const fetchData = async () => {
+        setShowErrorAlert(false);
         try {
           const animal = await getAnimalById(id);
           setAnimalData(animal);
@@ -93,7 +96,8 @@ function UpdateAnimalByTutor() {
   };
 
   const handleAnimalChange = (event) => {
-    try {
+    setShowErrorAlert(false);
+        try {
       const { name, value } = event.target;
       setAnimalData({ ...animalData, [name]: value });
     } catch (error) {
@@ -102,7 +106,8 @@ function UpdateAnimalByTutor() {
   };
 
   const handleEspecieSelection = (event) => {
-    try {
+    setShowErrorAlert(false);
+        try {
       const selectedEspecieId = event.target.value;
 
       setSelectedEspecie(selectedEspecieId);
@@ -115,7 +120,8 @@ function UpdateAnimalByTutor() {
   };
 
   const handleRacaSelection = (event) => {
-    try {
+    setShowErrorAlert(false);
+        try {
       const selectedRacaId = event.target.value;
       setSelectedRaca(selectedRacaId); // Ajuste aqui
     } catch (error) {
@@ -213,15 +219,24 @@ function UpdateAnimalByTutor() {
       },
     };
 
-    console.log("Dados do animal a ser atualizado:", animalToUpdate);
     if (validateForm()) {
       if (id) {
+        setShowErrorAlert(false);
         try {
           await updateAnimal(id, animalToUpdate);
           setShowAlert(true);
         } catch (error) {
           console.error("Erro ao atualizar o animal:", error);
-          setShowErrorAlert(true);
+          
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
+            setShowErrorAlert(true);
         }
       }
     }
@@ -388,7 +403,7 @@ function UpdateAnimalByTutor() {
       }
       {showErrorAlert && (
         <ErrorAlert
-          message="Erro ao editar informações do animal, tente novamente."
+          message={errorMessage || "Erro ao editar informações do animal, tente novamente."}
           show={showErrorAlert}
         />
       )}

@@ -18,6 +18,7 @@ function CreateMedico() {
 
     const [showAlert, setShowAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const { especialidades } = EspecialidadeList();
     const [selectEspecialidade, setSelectEspecialidade] = useState(null);
@@ -44,7 +45,6 @@ function CreateMedico() {
         especialidade: []
     });
 
-    console.log("medico:", medico);
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -59,7 +59,7 @@ function CreateMedico() {
             setToken(storedToken || "");
             setRoles(storedRoles || []);
         }
-      }, []);
+    }, []);
 
     // Verifica se o usuário tem permissão
     if (!roles.includes("secretario")) {
@@ -72,11 +72,11 @@ function CreateMedico() {
 
     if (!token) {
         return (
-          <div className={styles.container}>
-            <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
-          </div>
+            <div className={styles.container}>
+                <h3 className={styles.message}>Acesso negado: Faça login para acessar esta página.</h3>
+            </div>
         );
-      }
+    }
 
     const handleEspecialidadeSelection = (event) => {
         const especialidadeId = parseInt(event.target.value);
@@ -107,11 +107,11 @@ function CreateMedico() {
     const handleCreateMedico = async () => {
         event.preventDefault();
 
-       {/*} const validationErrors = validateFields(medico);
+        const validationErrors = validateFields(medico);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
-        } */}
+        }
 
         const MedicoToCreate = {
             nome: medico.nome,
@@ -131,14 +131,23 @@ function CreateMedico() {
             especialidade: selectedEspecialidades.map(espec => ({ id: espec.id }))
         };
 
-        console.log("MedicoToCreate:", MedicoToCreate);
 
+        setShowErrorAlert(false);
         try {
             await createMedico(MedicoToCreate);
             localStorage.setItem("token", token);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao criar médico:", error);
+            
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
             setShowErrorAlert(true);
         }
     };
@@ -242,6 +251,7 @@ function CreateMedico() {
             try {
                 setCityStateLoading(true);
                 const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+                if (response.data.erro) throw new Error("CEP não encontrado");
                 const { localidade, uf, logradouro, bairro } = response.data;
                 setMedico({
                     ...medico,
@@ -257,6 +267,7 @@ function CreateMedico() {
                 setCityStateLoading(false);
             } catch (error) {
                 console.error("Erro ao buscar CEP:", error);
+                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
                 setCityStateLoading(false);
             }
         }
@@ -357,7 +368,7 @@ function CreateMedico() {
 
             </form>
             {<Alert message="Veterinário(a) cadastrado(a) com sucesso!" show={showAlert} url={`/getAllMedicos`} />}
-            {showErrorAlert && <ErrorAlert message="Erro ao cadastrar veterinário(a), tente novamente." show={showErrorAlert} />}
+            {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao cadastrar veterinário(a), tente novamente."} show={showErrorAlert} />}
         </div>
     );
 }

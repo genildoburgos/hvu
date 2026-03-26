@@ -21,12 +21,11 @@ function UpdateTutorBySecretario() {
     const [confirmarSenhaErro, setConfirmarSenhaErro] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const [tutor, setTutor] = useState({});
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
-    const [loading, setLoading] = useState(true); 
-
-    console.log("tutor: ", tutor);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -40,7 +39,8 @@ function UpdateTutorBySecretario() {
     useEffect(() => {
         if (id) {
             const fetchData = async () => {
-                try {
+                setShowErrorAlert(false);
+        try {
                     const TutorData = await getTutorById(id);
                     setTutor(TutorData);
                 } catch (error) {
@@ -92,6 +92,7 @@ function UpdateTutorBySecretario() {
     };
 
     const fetchCepData = async (cep) => {
+        setShowErrorAlert(false);
         try {
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();
@@ -111,8 +112,10 @@ function UpdateTutorBySecretario() {
                 console.error("CEP não encontrado.");
             }
         } catch (error) {
-            console.error("Erro ao buscar CEP:", error);
-        }
+                console.error("Erro ao buscar CEP:", error);
+                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
+                
+            }
     };
 
     const handleCepChange = (event) => {
@@ -143,34 +146,34 @@ function UpdateTutorBySecretario() {
             newErrors.nome = "Campo obrigatório";
         }
         if (!tutor.email) {
-            newErrors.email = "Campo obrigatório"; 
+            newErrors.email = "Campo obrigatório";
         }
         if (!tutor.cpf) {
-            newErrors.cpf = "Campo obrigatório"; 
+            newErrors.cpf = "Campo obrigatório";
         }
         if (!tutor.telefone) {
-            newErrors.telefone = "Campo obrigatório"; 
+            newErrors.telefone = "Campo obrigatório";
         }
         if (!tutor.endereco.cep) {
-            newErrors.cep = "Campo obrigatório"; 
+            newErrors.cep = "Campo obrigatório";
         }
         if (!tutor.endereco.rua) {
-            newErrors.rua = "Campo obrigatório"; 
+            newErrors.rua = "Campo obrigatório";
         }
         if (!tutor.endereco.estado) {
-            newErrors.estado = "Campo obrigatório"; 
+            newErrors.estado = "Campo obrigatório";
         }
         if (!tutor.endereco.cidade) {
-            newErrors.cidade = "Campo obrigatório"; 
+            newErrors.cidade = "Campo obrigatório";
         }
         if (!tutor.endereco.numero) {
-            newErrors.numero = "Campo obrigatório"; 
+            newErrors.numero = "Campo obrigatório";
         }
         if (!tutor.endereco.bairro) {
-            newErrors.bairro = "Campo obrigatório"; 
+            newErrors.bairro = "Campo obrigatório";
         }
         setErrors(newErrors);
-    
+
         return Object.keys(newErrors).length === 0;
     };
 
@@ -197,12 +200,21 @@ function UpdateTutorBySecretario() {
             }
         };
 
+        setShowErrorAlert(false);
         try {
             await updateTutor(id, TutorToUpdate);
-            console.log("TutorToUpdate:", TutorToUpdate);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar tutor:", error);
+            
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
             setShowErrorAlert(true);
         }
     };
@@ -224,12 +236,12 @@ function UpdateTutorBySecretario() {
                             </div>
                             <div className={`col ${styles.col}`}>
                                 {renderTutorInput("Telefone", tutor.telefone, "telefone", tutor.telefone, handleTutorChange, "tel", errors.telefone, "(99) 99999-9999")}
-                            </div>                     
-                        </div> 
+                            </div>
+                        </div>
                     </div>
                     <div className={`col-md-6 ${styles.customCol}`}>
-                            {renderTutorInput("E-mail", tutor.email, "email", tutor.email, handleTutorChange, "email", errors.email)}
-                        </div>
+                        {renderTutorInput("E-mail", tutor.email, "email", tutor.email, handleTutorChange, "email", errors.email)}
+                    </div>
                 </div>
 
                 {/* opção de mudar senha */}
@@ -260,7 +272,7 @@ function UpdateTutorBySecretario() {
                         <div className={styles.titulo}>Endereço</div>
                         <div className="mb-3">
                             <div className="row">
-                            {renderEnderecoInput("Rua", "rua", tutor.endereco.rua, handleEnderecoChange, errors.rua, tutor.endereco.rua,)}
+                                {renderEnderecoInput("Rua", "rua", tutor.endereco.rua, handleEnderecoChange, errors.rua, tutor.endereco.rua,)}
                                 <div className={`col ${styles.col}`}>
                                     {renderEnderecoInput("CEP", "cep", tutor.endereco.cep, handleCepChange, errors.cep, tutor.endereco.cep, "text", "99999-999")}
                                     {renderEnderecoInput("Cidade", "cidade", tutor.endereco.cidade, handleEnderecoChange, errors.cidade, tutor.endereco.cidade)}
@@ -284,7 +296,7 @@ function UpdateTutorBySecretario() {
 
             </form>
             {<Alert message="Informações do(a) tutor(a) editadas com sucesso!" show={showAlert} url={`/pacientesBySecretario`} />}
-            {showErrorAlert && <ErrorAlert message="Erro ao editar informações do(a) tutor(a), tente novamente." show={showErrorAlert} />}
+            {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao editar informações do(a) tutor(a), tente novamente."} show={showErrorAlert} />}
         </div>
     );
 }

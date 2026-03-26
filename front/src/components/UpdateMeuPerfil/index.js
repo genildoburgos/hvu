@@ -22,6 +22,7 @@ function UpdateMeuPerfil() {
 
     const [showAlert, setShowAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [roles, setRoles] = useState([]);
     const [token, setToken] = useState("");
@@ -102,7 +103,8 @@ function UpdateMeuPerfil() {
     useEffect(() => {
         if (id) {
             const fetchData = async () => {
-                try {
+                setShowErrorAlert(false);
+        try {
                     const usuarioData = await getUsuarioById(id);
                     setUsuario(usuarioData);
                 } catch (error) {
@@ -173,6 +175,7 @@ function UpdateMeuPerfil() {
     };
 
     const fetchCepData = async (cep) => {
+        setShowErrorAlert(false);
         try {
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();
@@ -192,8 +195,10 @@ function UpdateMeuPerfil() {
                 console.error("CEP não encontrado.");
             }
         } catch (error) {
-            console.error("Erro ao buscar CEP:", error);
-        }
+                console.error("Erro ao buscar CEP:", error);
+                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
+                
+            }
     };
 
     const handleCepChange = (event) => {
@@ -285,12 +290,21 @@ function UpdateMeuPerfil() {
                 bairro: usuario.endereco.bairro
             }
         };
-        console.log("usuarioToUpdate:", usuarioToUpdate);
+        setShowErrorAlert(false);
         try {
             await updateUsuario(usuario.id, usuarioToUpdate);
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar usuario:", error);
+            
+            const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
+                if (error?.response?.data?.message && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.message);
+                } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                    setErrorMessage(error?.response?.data?.error);
+                } else {
+                setErrorMessage("");
+            }
             setShowErrorAlert(true);
         }
     };
@@ -371,7 +385,7 @@ function UpdateMeuPerfil() {
 
             </form>
             {<Alert message="Informações editadas com sucesso!" show={showAlert} url={(roles.includes('admin_lapa') || roles.includes('patologista')) ? `/lapa/meuPerfil/${id}` : `/meuPerfil/${id}`} />}
-            {showErrorAlert && <ErrorAlert message="Erro ao editar informações, tente novamente." show={showErrorAlert} />}
+            {showErrorAlert && <ErrorAlert message={errorMessage || "Erro ao editar informações, tente novamente."} show={showErrorAlert} />}
         </div>
     );
 }

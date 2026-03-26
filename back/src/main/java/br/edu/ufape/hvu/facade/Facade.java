@@ -931,6 +931,10 @@ public class Facade {
         for (VagaTipoRequest especialidadeTipo : vagaTipo) {
             LocalDateTime dateTime = LocalDateTime.of(data, especialidadeTipo.getHorario());
             try {
+                if (dateTime.isBefore(LocalDateTime.now())) {
+                    throw new IllegalArgumentException("A data e hora da vaga não podem estar no passado.");
+                }
+
                 Especialidade especialidade = findEspecialidadeById(especialidadeTipo.getEspecialidade().getId());
                 TipoConsulta tipoConsulta = findTipoConsultaById(especialidadeTipo.getTipoConsulta().getId());
                 Medico medico = findMedicoById(especialidadeTipo.getMedico().getId(), idSession);
@@ -1115,6 +1119,10 @@ public class Facade {
             throw new IllegalArgumentException("Não é permitido agendar animais que tiveram óbito.");
         }
 
+        if (newObject.getHorario().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("O agendamento não pode estar no passado.");
+        }
+
         Vaga vaga = new Vaga();
         Agendamento agendamento = new Agendamento();
 
@@ -1179,6 +1187,10 @@ public class Facade {
         Agendamento agendamento = findAgendamentoById(idAgendamento, idSession);
         Vaga vagaAntiga = getVagaByAgendamento(agendamento.getId(), idSession);
         Vaga novaVaga = findVagaById(idVaga, idSession);
+
+        if (novaVaga.getDataHora().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("A nova vaga não pode estar no passado.");
+        }
 
         // cancelando vaga anterior, que é a vaga antiga que precisa ser reagendada
         if (vagaAntiga != null){

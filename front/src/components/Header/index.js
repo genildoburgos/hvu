@@ -147,7 +147,6 @@ export function Header03() {
         const TutoresData = await getCurrentUsuario();
         setCurrentUser(TutoresData);
         setTutores(TutoresData.usuario);
-        console.log("Usuários:", TutoresData);
       } catch (error) {
         console.error("Erro ao buscar usuários:", error);
       }

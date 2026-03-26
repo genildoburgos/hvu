@@ -41,7 +41,6 @@ function HistoricoFichasAnimal() {
       }
       try {
         const todasAsFichas = await getFichasByAnimalId(animalId);
-        console.log("Dados brutos da API (todasAsFichas):", todasAsFichas);
         if (!Array.isArray(todasAsFichas)) {
           setAgendamentosComFichas(new Map()); 
           return;

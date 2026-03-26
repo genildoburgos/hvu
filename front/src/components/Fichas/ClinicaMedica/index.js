@@ -257,7 +257,6 @@ function ClinicaMedicaSteps() {
         const aId = router.query.agendamentoId; // Obtém o ID do agendamento da URL
         if (id) {
         setConsultaId(id);
-        console.log("ID da ficha:", id);
         }
         if (aId) {
           setAgendamentoId(aId); // Define o ID do agendamento
@@ -331,7 +330,6 @@ function ClinicaMedicaSteps() {
 
     };
 
-    console.log("➡️  Enviando para a API:", fichaData);
 
     try {
         const resultado = await createFicha(fichaData);

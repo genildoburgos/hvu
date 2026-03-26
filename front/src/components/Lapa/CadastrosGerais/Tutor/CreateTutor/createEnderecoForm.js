@@ -11,11 +11,14 @@ function CreateEnderecoForm({
 	laiChecked,
 	handleCheckboxChange,
 }) {
+    const [cepError, setCepError] = useState("");
+
 	const handleCEPChange = async (event) => {
 		const cep = event.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
 		handleEnderecoChange(event); // Chama a função handleEnderecoChange para atualizar o estado com o valor do CEP
 
 		if (cep.length === 8) {
+            setCepError("");
 			// Verifica se o CEP tem 8 dígitos
 			try {
 				const response = await axios.get(
@@ -33,13 +36,11 @@ function CreateEnderecoForm({
 				handleEnderecoChange({ target: { name: "rua", value: logradouro } });
 				handleEnderecoChange({ target: { name: "bairro", value: bairro } });
 			} catch (error) {
-				console.error("Erro ao buscar CEP:", error);
-				// Opcional: definir um estado de erro ou mensagem de erro para exibir ao usuário
-			}
+            console.error("Erro ao buscar CEP:", error);
+            setCepError("CEP não encontrado");
+        }
 		}
 	};
-
-	console.log("enderecoFormData:", enderecoFormData);
 
 	return (
 		<div className={styles.boxcadastrotutor}>
@@ -53,7 +54,7 @@ function CreateEnderecoForm({
 							enderecoFormData.cep,
 							handleCEPChange,
 							"Digite o cep",
-							errors.cep,
+							cepError || errors.cep,
 							"text",
 							"99999-999"
 						)}
@@ -102,9 +103,8 @@ function CreateEnderecoForm({
 					</div>
 				</div>
 				<div
-					className={`${styles.informacaoLAI} ${
-						errors.lai ? "is-invalid" : ""
-					}`}
+					className={`${styles.informacaoLAI} ${errors.lai ? "is-invalid" : ""
+						}`}
 				>
 					<p>
 						A{" "}
