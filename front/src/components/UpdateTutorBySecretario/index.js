@@ -40,7 +40,7 @@ function UpdateTutorBySecretario() {
         if (id) {
             const fetchData = async () => {
                 setShowErrorAlert(false);
-        try {
+                try {
                     const TutorData = await getTutorById(id);
                     setTutor(TutorData);
                 } catch (error) {
@@ -97,6 +97,7 @@ function UpdateTutorBySecretario() {
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();
             if (!data.erro) {
+                setErrors(prev => { const e = { ...prev }; delete e.cep; return e; });
                 setTutor({
                     ...tutor,
                     endereco: {
@@ -109,17 +110,17 @@ function UpdateTutorBySecretario() {
                     }
                 });
             } else {
-                console.error("CEP não encontrado.");
+                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
             }
         } catch (error) {
-                console.error("Erro ao buscar CEP:", error);
-                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
-                
-            }
+            console.error("Erro ao buscar CEP:", error);
+            setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
+        }
     };
 
     const handleCepChange = (event) => {
         const { value } = event.target;
+        const digits = value.replace(/\D/g, '');
         setTutor({
             ...tutor,
             endereco: {
@@ -127,7 +128,11 @@ function UpdateTutorBySecretario() {
                 cep: value
             }
         });
-        fetchCepData(value);
+        if (digits.length === 8) {
+            fetchCepData(digits);
+        } else {
+            setErrors(prev => { const e = { ...prev }; delete e.cep; return e; });
+        }
     };
 
     const validateForm = () => {
@@ -156,6 +161,10 @@ function UpdateTutorBySecretario() {
         }
         if (!tutor.endereco.cep) {
             newErrors.cep = "Campo obrigatório";
+        } else if (tutor.endereco.cep.replace(/\D/g, '').length !== 8) {
+            newErrors.cep = "CEP inválido";
+        } else if (errors.cep === "CEP não encontrado") {
+            newErrors.cep = "CEP não encontrado";
         }
         if (!tutor.endereco.rua) {
             newErrors.rua = "Campo obrigatório";
@@ -206,13 +215,13 @@ function UpdateTutorBySecretario() {
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar tutor:", error);
-            
+
             const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
-                if (error?.response?.data?.message && !isDataIntegrityError) {
-                    setErrorMessage(error?.response?.data?.message);
-                } else if (error?.response?.data?.error && !isDataIntegrityError) {
-                    setErrorMessage(error?.response?.data?.error);
-                } else {
+            if (error?.response?.data?.message && !isDataIntegrityError) {
+                setErrorMessage(error?.response?.data?.message);
+            } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                setErrorMessage(error?.response?.data?.error);
+            } else {
                 setErrorMessage("");
             }
             setShowErrorAlert(true);

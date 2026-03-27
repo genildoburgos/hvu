@@ -136,13 +136,13 @@ function CreatePatologista() {
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao criar patologista:", error);
-            
+
             const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
-                if (error?.response?.data?.message && !isDataIntegrityError) {
-                    setErrorMessage(error?.response?.data?.message);
-                } else if (error?.response?.data?.error && !isDataIntegrityError) {
-                    setErrorMessage(error?.response?.data?.error);
-                } else {
+            if (error?.response?.data?.message && !isDataIntegrityError) {
+                setErrorMessage(error?.response?.data?.message);
+            } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                setErrorMessage(error?.response?.data?.error);
+            } else {
                 setErrorMessage("");
             }
             setShowErrorAlert(true);
@@ -214,6 +214,10 @@ function CreatePatologista() {
         }
         if (!patologista.endereco.cep) {
             errors.cep = "Campo obrigatório";
+        } else if (patologista.endereco.cep.replace(/\D/g, '').length !== 8) {
+            errors.cep = "CEP inválido";
+        } else if (errors.cep === "CEP não encontrado") {
+            errors.cep = "CEP não encontrado";
         }
         if (!patologista.endereco.rua) {
             errors.rua = "Campo obrigatório";
@@ -244,12 +248,17 @@ function CreatePatologista() {
                 cep: cep
             }
         });
-        if (/^\d{8}$/.test(cep)) { // Verifica se a string do CEP tem exatamente 8 dígitos
+        if (/^\d{8}$/.test(cep)) {
             setShowErrorAlert(false);
-        try {
+            try {
                 setCityStateLoading(true);
                 const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-                if (response.data.erro) throw new Error("CEP não encontrado");
+                if (response.data.erro) {
+                    setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
+                    setCityStateLoading(false);
+                    return;
+                }
+                setErrors(prev => { const e = { ...prev }; delete e.cep; return e; });
                 const { localidade, uf, logradouro, bairro } = response.data;
                 setPatologista({
                     ...patologista,
@@ -268,6 +277,8 @@ function CreatePatologista() {
                 setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
                 setCityStateLoading(false);
             }
+        } else {
+            setErrors(prev => { const e = { ...prev }; delete e.cep; return e; });
         }
     };
 

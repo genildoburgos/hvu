@@ -62,7 +62,7 @@ function UpdatePatologista() {
         if (id) {
             const fetchData = async () => {
                 setShowErrorAlert(false);
-        try {
+                try {
                     const patologistaData = await getPatologistaById(id);
                     setPatologista(patologistaData);
                     setSelectedEspecialidades(patologistaData.especialidade);
@@ -178,6 +178,7 @@ function UpdatePatologista() {
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();
             if (!data.erro) {
+                setErrors(prev => { const e = { ...prev }; delete e.cep; return e; });
                 setPatologista({
                     ...patologista,
                     endereco: {
@@ -190,17 +191,17 @@ function UpdatePatologista() {
                     }
                 });
             } else {
-                console.error("CEP não encontrado.");
+                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
             }
         } catch (error) {
-                console.error("Erro ao buscar CEP:", error);
-                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
-                
-            }
+            console.error("Erro ao buscar CEP:", error);
+            setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
+        }
     };
 
     const handleCepChange = (event) => {
         const { value } = event.target;
+        const digits = value.replace(/\D/g, '');
         setPatologista({
             ...patologista,
             endereco: {
@@ -208,7 +209,11 @@ function UpdatePatologista() {
                 cep: value
             }
         });
-        fetchCepData(value);
+        if (digits.length === 8) {
+            fetchCepData(digits);
+        } else {
+            setErrors(prev => { const e = { ...prev }; delete e.cep; return e; });
+        }
     };
 
     const validateCPF = (cpf) => {
@@ -274,6 +279,8 @@ function UpdatePatologista() {
 
         // Validações do endereço
         if (!patologista.endereco.cep) newErrors.cep = "Campo obrigatório";
+        else if (patologista.endereco.cep.replace(/\D/g, '').length !== 8) newErrors.cep = "CEP inválido";
+        else if (errors.cep === "CEP não encontrado") newErrors.cep = "CEP não encontrado";
         if (!patologista.endereco.rua) newErrors.rua = "Campo obrigatório";
         if (!patologista.endereco.estado) newErrors.estado = "Campo obrigatório";
         if (!patologista.endereco.cidade) newErrors.cidade = "Campo obrigatório";
@@ -316,13 +323,13 @@ function UpdatePatologista() {
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar patologista:", error);
-            
+
             const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
-                if (error?.response?.data?.message && !isDataIntegrityError) {
-                    setErrorMessage(error?.response?.data?.message);
-                } else if (error?.response?.data?.error && !isDataIntegrityError) {
-                    setErrorMessage(error?.response?.data?.error);
-                } else {
+            if (error?.response?.data?.message && !isDataIntegrityError) {
+                setErrorMessage(error?.response?.data?.message);
+            } else if (error?.response?.data?.error && !isDataIntegrityError) {
+                setErrorMessage(error?.response?.data?.error);
+            } else {
                 setErrorMessage("");
             }
             setShowErrorAlert(true);
