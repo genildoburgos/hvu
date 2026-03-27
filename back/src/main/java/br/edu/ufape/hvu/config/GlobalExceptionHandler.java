@@ -8,6 +8,7 @@ import br.edu.ufape.hvu.exception.types.NotFoundException;
 import br.edu.ufape.hvu.exception.types.auth.ForbiddenOperationException;
 import br.edu.ufape.hvu.exception.types.auth.KeycloakAuthenticationException;
 import br.edu.ufape.hvu.exception.types.global.ErrorResponse;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -196,6 +197,25 @@ public class GlobalExceptionHandler {
         stackToStringList(ex.getStackTrace()),
         LocalDateTime.now()
     );
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
+        String errorMessage = ex.getConstraintViolations().stream()
+                .map(v -> v.getMessage())
+                .findFirst()
+                .orElse("Dados inválidos");
+
+        logger.warn("Erro de validação (ConstraintViolation): {}", errorMessage);
+
+        ErrorResponse error = new ErrorResponse(
+                "Erro de validação",
+                errorMessage,
+                stackToStringList(ex.getStackTrace()),
+                LocalDateTime.now()
+        );
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

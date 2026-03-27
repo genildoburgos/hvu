@@ -11,22 +11,23 @@ function CreateEnderecoForm({
   laiChecked,
   handleCheckboxChange,
 }) {
-    const [cepError, setCepError] = useState("");
+  const [cepError, setCepError] = useState("");
 
   const handleCEPChange = async (event) => {
     const cep = event.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
     handleEnderecoChange(event); // Chama a função handleEnderecoChange para atualizar o estado com o valor do CEP
 
     if (cep.length === 8) {
-            setCepError("");
       // Verifica se o CEP tem 8 dígitos
       try {
         const response = await axios.get(
           `https://viacep.com.br/ws/${cep}/json/`
         );
         if (response.data.erro) {
-          throw new Error("CEP não encontrado");
+          setCepError("CEP não encontrado");
+          return;
         }
+        setCepError("");
 
         const { localidade, uf, logradouro, bairro } = response.data;
 
@@ -36,9 +37,11 @@ function CreateEnderecoForm({
         handleEnderecoChange({ target: { name: "rua", value: logradouro } });
         handleEnderecoChange({ target: { name: "bairro", value: bairro } });
       } catch (error) {
-            console.error("Erro ao buscar CEP:", error);
-            setCepError("CEP não encontrado");
-        }
+        console.error("Erro ao buscar CEP:", error);
+        setCepError("CEP não encontrado");
+      }
+    } else {
+      setCepError("");
     }
   };
 

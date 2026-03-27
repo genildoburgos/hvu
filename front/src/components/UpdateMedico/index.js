@@ -62,7 +62,7 @@ function UpdateMedico() {
         if (id) {
             const fetchData = async () => {
                 setShowErrorAlert(false);
-        try {
+                try {
                     const MedicoData = await getMedicoById(id);
                     setMedico(MedicoData);
                     // Pré-seleciona as especialidades do médico
@@ -145,6 +145,7 @@ function UpdateMedico() {
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();
             if (!data.erro) {
+                setErrors(prev => { const e = { ...prev }; delete e.cep; return e; });
                 setMedico({
                     ...medico,
                     endereco: {
@@ -157,17 +158,17 @@ function UpdateMedico() {
                     }
                 });
             } else {
-                console.error("CEP não encontrado.");
+                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
             }
         } catch (error) {
-                console.error("Erro ao buscar CEP:", error);
-                setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
-                
-            }
+            console.error("Erro ao buscar CEP:", error);
+            setErrors(prev => ({ ...prev, cep: "CEP não encontrado" }));
+        }
     };
 
     const handleCepChange = (event) => {
         const { value } = event.target;
+        const digits = value.replace(/\D/g, '');
         setMedico({
             ...medico,
             endereco: {
@@ -175,7 +176,11 @@ function UpdateMedico() {
                 cep: value
             }
         });
-        fetchCepData(value);
+        if (digits.length === 8) {
+            fetchCepData(digits);
+        } else {
+            setErrors(prev => { const e = { ...prev }; delete e.cep; return e; });
+        }
     };
 
     const validateForm = () => {
@@ -213,6 +218,10 @@ function UpdateMedico() {
         }
         if (!medico.endereco.cep) {
             newErrors.cep = "Campo obrigatório";
+        } else if (medico.endereco.cep.replace(/\D/g, '').length !== 8) {
+            newErrors.cep = "CEP inválido";
+        } else if (errors.cep === "CEP não encontrado") {
+            newErrors.cep = "CEP não encontrado";
         }
         if (!medico.endereco.rua) {
             newErrors.rua = "Campo obrigatório";
@@ -265,13 +274,14 @@ function UpdateMedico() {
             setShowAlert(true);
         } catch (error) {
             console.error("Erro ao editar medico:", error);
-            
+
             const isDataIntegrityError = error?.response?.data?.error === "Erro de integridade de dados" || error?.response?.data?.message?.includes("violates foreign key constraint");
-                if (error?.response?.data?.message && !isDataIntegrityError) {
-                    setErrorMessage(error?.response?.data?.message);
-                } else if (error?.response?.data?.error && !isDataIntegrityError) {
-                    setErrorMessage(error?.response?.data?.error);
-                } else {
+            const isRawValidationDump = error?.response?.data?.message?.includes("ConstraintViolation");
+            if (error?.response?.data?.message && !isDataIntegrityError && !isRawValidationDump) {
+                setErrorMessage(error?.response?.data?.message);
+            } else if (error?.response?.data?.error && !isDataIntegrityError && !isRawValidationDump) {
+                setErrorMessage(error?.response?.data?.error);
+            } else {
                 setErrorMessage("");
             }
             setShowErrorAlert(true);
